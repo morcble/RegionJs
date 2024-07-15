@@ -11,29 +11,26 @@ If you got the above concerns, please try out this web framework. It's a lightwe
 - Adhering to conventional component standards, it supports data binding, CSS styling, and JavaScript isolation for components.
 - Without the need for compiling source code, it offers a what-you-see-is-what-you-get experience.
 
-
+# The basic composition structure of a component
 ```html
 <style type="text/css">
-
-
+	/* component scope css */
 </style>
 
 <div id="REGION" class="hidden">
-
+	<!--  component scope html -->
 </div>	
-
 
 <script type="text/javascript">
 var REGION = {
-		afterRenderData:function(){
-			//var paraName = this.paraMap.get("paraName");
-			
-		}
+	afterRenderData:function(){
+		// <!--  component scope javascript -->
+	}
 };
 
-
+<!--  component mounted trigger -->
 RS.ready(function(){
-	var region = RS.newRegion("#REGION");
+	var region = RS.newRegion("#REGION",null);
 	region.afterRenderData = REGION.afterRenderData;
 	region.renderRegion();
 })
