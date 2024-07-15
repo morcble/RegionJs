@@ -18,13 +18,13 @@ If you got the above concerns, please try out this web framework. It's a lightwe
 </style>
 
 <div id="REGION" class="hidden">
-	<!--  component scope html -->
+	  <!--  component scope html -->
 </div>	
 
 <script type="text/javascript">
 var REGION = {
 	afterRenderData:function(){
-		// <!--  component scope javascript -->
+            <!--  component lifecycle of it is renderred or refreshed -->
 	}
 };
 
