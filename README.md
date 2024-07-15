@@ -10,3 +10,31 @@ If you got the above concerns, please try out this web framework. It's a lightwe
 - It is a modern web frontend framework constructed with a comprehensive component-oriented approach and adhering to object-oriented principles. It extends standard HTML tags and compatible with jQuery syntax.
 - Adhering to conventional component standards, it supports data binding, CSS styling, and JavaScript isolation for components.
 - Without the need for compiling source code, it offers a what-you-see-is-what-you-get experience.
+
+
+```html
+<style type="text/css">
+
+
+</style>
+
+<div id="REGION" class="hidden">
+
+</div>	
+
+
+<script type="text/javascript">
+var REGION = {
+		afterRenderData:function(){
+			//var paraName = this.paraMap.get("paraName");
+			
+		}
+};
+
+
+RS.ready(function(){
+	var region = RS.newRegion("#REGION");
+	region.afterRenderData = REGION.afterRenderData;
+	region.renderRegion();
+})
+</script>
