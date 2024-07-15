@@ -1,0 +1,397 @@
+@import "./button.less";
+@import "./index.less";
+@import "./common/pc.less";
+@import "./common/theme.less";
+@import "./common/form.less";
+@import "./common/table.less";
+@import "./theme/skin1.css";
+@import "./theme/skin2.css";
+@import "./theme/skin3.css";
+@import "./theme/skin4.css";
+@import "./theme/skin5.css";
+@import "./theme/skin6.css";
+@import "./theme/skin7.css";
+@import "./theme/light.css";
+@import "./theme/dark.css";
+
+.shift-left {
+  .shift-month{
+    .duty-group{
+      background:@linear;
+    }
+  }
+}
+.form-control{
+  border: 1px solid #eee;
+  &:focus{
+    border:1px solid @color;
+    transition: border .3s ease-in-out;
+  }
+}
+.fa-lg{
+  vertical-align: initial;
+}
+.highlight{
+  background: #ebf7ff;
+  cursor: pointer;
+}
+.hand-padding{
+  padding: @size1 * 10 @size1 * 15;
+}
+.pr-5{
+  margin-right:@size1 * 5;
+}
+/**
+* 头部切换
+*/
+.light-pot{
+  //padding-top: @size1 * 50;
+}
+button{
+  label{
+    cursor: pointer;
+  }
+}
+.stackmenu-cell{
+  background:@color-fff;
+  //box-shadow: inset 1px 1px 5px rgb(110 110 110 / 81%), -@size1 * 5 0 5px rgb(0 0 0 / 27%);
+  .fa-classic, .fa-light, .fa-regular, .fa-solid, .fa-thin, .fal, .far, .fas, .fat{
+    color: @color;
+  }
+  .stakmenu-bg{
+    background:@color-fff;
+  }
+}
+.split-balance{
+  overflow: hidden;
+  background:@color-e1;
+}
+
+.admincontent{
+  overflow-y: auto;
+  &::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track, &::-webkit-scrollbar-thumb{
+    border-radius: 999px;
+  }
+  &::-webkit-scrollbar-track{
+    background-color:@color-eb;
+  }
+  &::-webkit-scrollbar-thumb{
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  &::-webkit-scrollbar-corner{
+    background: transparent;
+  }
+}
+.stackmenu{
+  .color-33;
+  .branch{
+    //padding: @size1 * 12 0 @size1 * 12 @size1 * 16;
+    border-left:0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    &:hover {
+      border-left-color: inherit;
+      .menu-label{
+        .color;
+      }
+    }
+  }
+  .branch-selected {
+    &:hover {
+      border-left-color: inherit;
+      transition: .3s ease-in-out;
+      .menu-label {
+        .color-ff !important;
+        font-weight: bold;
+        text-shadow: 0 1px #000;
+      }
+    }
+  }
+  .leaf{
+    padding:  @size1 * 12 0 @size1 * 12 @size1 * 48;
+    border-left:0;
+    text-align: left;
+    &:hover{
+      .menu-label{
+        .color;
+      }
+    }
+    &.leaf-selected {
+      //background-color: @color-fff;
+      border-left-color: inherit;
+      font-weight: bold;
+      //.box-shadow;
+      transition: all 0.2s ease-in-out;
+      &:hover{
+        .menu-label{
+          color: @color-fff;
+        }
+      }
+    }
+  }
+
+  .branch-selected{
+    background: @linear;
+    transition: all 0.3s linear;
+    box-shadow:inherit;
+    //box-shadow:-5px -2px 40px @color333, 5px 5px 40px @color-fff;
+    position: relative;
+    .color-ff;
+    &:hover{
+      .color-ff;
+    }
+    .fa-classic, .fa-light, .fa-regular, .fa-solid, .fa-thin, .fal, .far, .fas, .fat{
+      color: #fff;
+    }
+  }
+  .menu-node{
+    font-size: @size1 * 18;
+  }
+}
+.background-header{
+  background: @linear;
+  line-height:@size1 * 50;
+  .nav-list {
+    display: flex;
+    /* float: left; */
+    grid-row-gap: @size1 * 20;
+    align-items: center;
+    grid-auto-flow: column;
+    padding: 0;
+    li{
+      text-align: center;
+      font-size:@size1 * 18;
+      cursor: pointer;
+      padding: 0 @size1 * 20;
+      &:hover{
+        color: @color-fff;
+        background: @linear;
+        box-shadow: -1px 2px 10px 0 rgba(0, 0, 0, 0.4);
+        transition: all .3s linear;
+      }
+      &.nav-active{
+        background: @linear;
+        box-shadow: -1px 2px 10px 0 rgba(0, 0, 0, 0.4);
+        transition: all .3s linear;
+      }
+    }
+
+  }
+}
+.background-theme1{
+  background:  url("@{img}bg1.png")  no-repeat center;
+  background-size: cover;
+}
+//tab切换样式
+[ data-bg=tab]{
+  background: @colorf5;
+  border:1px solid @color-eb;
+  .tab-active{
+    &:before{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      content: "";
+      right: 0;
+      height: @size1 * 3;
+      background:@color;
+    }
+  }
+}
+.active{
+  color: @color;
+}
+//showMsg
+.show-message{
+  background:rgba(0,0,0,0.5);
+  padding: @size1 * 10 @size1 * 20;
+  border: 1px solid @colorf5;
+  border-radius: 5px;
+  color: @color-fff;
+  position: relative;
+  font-size:@size1 * 16;
+  line-height: @size1 * 22;
+  pointer-events: none;
+  max-width: 100%;
+  .box-shadow;
+  word-break: break-all;
+  &:after{
+    content: '';
+    width:0;
+    height:0;
+    border-left:@size1 * 10 solid transparent;
+    border-right:@size1 * 10 solid transparent;
+    border-top:@size1 * 10 solid rgba(0,0,0,0.5);
+    position: absolute;
+    bottom: -@size1 * 8;
+    z-index: 999;
+    left: @size1 * 3;
+  }
+}
+.select-icon{
+  .fa-solid{
+    color: #999;
+  }
+}
+.btn-info.disabled.focus, .btn-info.disabled:focus, .btn-info.disabled:hover, .btn-info[disabled].focus, .btn-info[disabled]:focus, .btn-info[disabled]:hover, fieldset[disabled] .btn-info.focus, fieldset[disabled] .btn-info:focus, fieldset[disabled] .btn-info:hover{
+  background-color:@color-h;
+  border-color:@color-h;
+  color: @color-fff;
+}
+.cards{
+  .cards-item{
+    /* 初始化每个卡片的宽度，占据父容器的 1/4 */
+    flex-basis:25%;
+    padding:@size1 * 15;
+    .card-content{
+      position:relative;
+      background: @color-fff;
+      height:@size1 * 240;
+      border-radius:@size1 * 5;
+      box-shadow: 0 @size1 * 5 @size1 * 10 rgba(0, 0, 0, 0.2);
+      transition: all 0.5s ease;
+      line-height: @size1 * 32;
+      padding:@size1 * 24;
+      box-sizing: border-box;
+      &:hover{
+        background: @color-fff;
+        box-shadow: 0 @size1 * 6 @size1 * 19 rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
+.card-title{
+  display: flex;
+  flex-wrap: wrap;
+  label{
+    color: #717579;
+    padding-right:@size1 * 16;
+    width: @size1 * 80;
+    display: block;
+  }
+  span{
+    color:#1D1B23;
+  }
+
+}
+.card-title-flex{
+  label{
+    display: block;
+    width: 100%;
+    color: #717579;
+  }
+  span{
+    display: block;
+    width: 100%;
+    color:#1D1B23;
+    font-weight: bold;
+  }
+}
+[border-left]{
+  position: relative;
+  &:after{
+    left: 0;
+    width: @size1 * 2;
+    height: 100%;
+    background: @color-e1;
+    content:'';
+    position: absolute;
+    top: 0;
+  }
+}
+[border-right]{
+  position: relative;
+  &:after{
+    right: 0;
+    width: @size1 * 2;
+    height: 100%;
+    background: @color-e1;
+    content:'';
+    position: absolute;
+    top:0;
+  }
+}
+[data-type=border]{
+  border: 1px solid @color-e1;
+}
+.table-body >{
+  .datas{
+    [border-top]{
+      border-top: 1px solid @color-e1;
+      border-bottom: 0 !important;
+      &:last-child{
+        border-bottom:1px solid @color-e1 !important;
+      }
+      &:first-child{
+        border-top:0
+      }
+    }
+
+  }
+
+}
+.res-arrow{
+  color: @color-icon;
+  border-top: 1px solid @color-e1;
+  &:hover{
+    background: @color-e1;
+    transition: background .3s;
+  }
+}
+pre{
+  background: @color-fff;
+  color: @color-66;
+}
+
+.table-skin li > div:hover{
+  background: #ebf7ff;
+  transition: .5s ease-in-out;
+}
+
+.background-f3{
+  background:@colorf5;
+  input[type="checkbox"]:checked + .checkmark:before {
+    content: "";
+    position: absolute;
+    left:0 ;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: @color;
+    color: @color-fff;
+
+  }
+  input[type="checkbox"]:checked  {
+    &~.check-title {
+      color: @color-fff;
+    }
+    &~.check-msg{
+      color: @color-fff;
+    }
+
+  }
+}
+//css样式规范相关样式
+.guides-default{
+  display: block;
+  padding-left:@size1 * 20;
+}
+.guides-active{
+  background: @linear;
+  transition: all 0.1s linear;
+  position: relative;
+  color: @color-fff;
+  &:hover{
+    color: @color-fff;
+  }
+}
+
+.Region.actived{
+	background: rgba(0,0,0,0.03);
+}

@@ -1,0 +1,93 @@
+<style type="text/css">
+#REGION .icon{
+	float: right;
+}
+
+#REGION .form-wrap{
+	height: 100%;
+}
+
+#REGION .panel-title{
+	display: inline-block;
+}
+
+#REGION .form-title {
+	margin-top: 0px;
+}
+#REGION .form {
+	padding: 0px;
+}
+
+#REGION .common-tree{
+	height:calc(100% - 89px);
+    overflow: auto;
+}
+
+</style>
+
+<div id="REGION" class="hidden">
+	<div class="form-wrap match-parent">
+		<div class="form">
+			<div class="form-info form-title">
+				<div class="title form-text"></div>
+				<!-- <div class="toolbar toolbar-theme" onclick="REGION.addLevelOne(event);">
+					<i class="fa fa-plus grid-plus" title="add"></i>
+				</div> -->
+			</div>
+
+			<div style="margin:0.5rem">
+				<input type="text" class="form-control" placeholder="输入关键字搜索" oninput="REGION.filterTree(event)">
+			</div>
+
+			<div class="common-tree"></div>
+		</div>
+	</div>
+
+</div>
+
+
+<script type="text/javascript">
+var REGION = {
+		filterTree:function(event){
+			var targetElem = RegionUtil.getEventTarget(event);
+			var curRegion = RegionUtil.getRegionByElem(targetElem);
+
+			var treeRegion = RegionUtil.getRegionById(curRegion.treeRegionId);
+			treeRegion.filterNode($(targetElem).val());
+		},
+		afterRenderData:function(){
+			var curRegion = this;
+			var outerRegion = RegionUtil.getOuterRegion(curRegion);
+			
+			if(!curRegion.inited)curRegion.inited = true;else return;
+
+			curRegion.find(".title").text(outerRegion.treeTitle);
+
+			var treeRegionId = curRegion.regionId+"_tree";
+			curRegion.treeRegionId = treeRegionId;
+			var regionLoadedDefer = new jQuery.Deferred();
+			var def = RegionUtil.loadRegion(curRegion.find(".common-tree"),"common/shared/tree/simple-tree-readonly.rs?showDots=false&accordion=true",treeRegionId);
+			def.done(function(treeRegion){
+				treeRegion.treeData = curRegion.provinces;
+				regionLoadedDefer.resolve();
+			});
+			return regionLoadedDefer.promise();
+		},
+		addLevelOne:function(event){
+			var curRegion = RegionUtil.getRegionByEvent(event);
+			var parentRegion = RegionUtil.getOuterRegion(curRegion);
+			parentRegion.addLevelOne(curRegion);
+		}
+};
+
+RegionUtil.ready(function(){
+	var promise = RegionUtil.getProvinces();
+	promise.done(function(provinces){
+		var provinceDs = RegionUtil.convertListToTree(provinces);
+		var staticRegion = RegionUtil.newStaticRegion("#REGION");
+		staticRegion.provinces = provinceDs;
+		staticRegion.afterRenderData = REGION.afterRenderData;
+		staticRegion.renderRegion();
+	})
+})
+</script>

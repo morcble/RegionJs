@@ -1,0 +1,302 @@
+@import "./common/theme.less";
+button {
+  outline: none;
+  font-size: @size1 * 18;
+}
+.btn{
+  min-width: @size1 * 80;
+  padding: @size1 * 10 @size1 * 15 @size1 * 10;
+  font-size:@size1 * 16;
+  height:@size1 * 44;
+  background: transparent;
+  box-sizing: border-box;
+  line-height: 100%;
+
+}
+/*
+*小型按钮
+*/
+//.btn-sm{
+//  min-width: auto;
+//  font-size:@size1 * 16;
+//  background: transparent;
+//  line-height: initial;
+//  padding: @size1 * 3 @size1 * 8;
+//}
+.btn:active{
+  //border: 0 !important;
+}
+//默认颜色
+[data-type=default]{
+  .type-normal(@color333);
+  &:hover{
+    .default-hover(@color333-h)
+
+  }
+}
+//信息
+[data-type=info]{
+  .type-normal(@color333);
+  &:hover{
+    .default-hover(@color333-h)
+
+  }
+}
+//主要颜色
+[data-type=primary]{
+  .type-normal(@color);
+  &:hover{
+    .default-hover(@color-h);
+
+  }
+}
+//警告颜色
+[data-type=warning]{
+  .type-normal(@color-waring);
+  &:hover{
+    .default-hover(@color-waring-h)
+  }
+}
+//危险、删除颜色
+[data-type=danger]{
+  .type-normal(@color-f3);
+  &:hover{
+    .default-hover(@color-f3-h)
+  }
+}
+//成功颜色
+[data-type=success]{
+  .type-normal(@color-success);
+  &:hover{
+    .default-hover(@color-success-h)
+  }
+}
+//禁用颜色
+[data-type=disable]{
+  .type-disabled(@colorc0,@colore4);
+  .fa{
+    color: @colorc0;
+    cursor: unset;
+    background-image: none;
+  }
+}
+
+//主要颜色按钮背景样式
+[data-type=primary][normal]{
+  .type-color(@color-fff,@color,@color,4px);
+  &:hover{
+    .type-hover(@color-fff,@color-h,@color-66);
+  }
+}
+[data-type=primary][normal][round]{
+  .type-color(@color-fff,@color,@color,20px);
+  &:hover{
+    .type-hover(@color-fff,@color-h,@color-66);
+  }
+}
+[data-type=primary][plain]{
+  .type-color(@color,@color-bg,@color,4px);
+  &:hover{
+    .type-hover(@color-fff,@color,@color);
+  }
+}
+[data-type=primary][plain][round]{
+  .type-color(@color,@color-bg,@color,20px);
+  &:hover{
+    .type-hover(@color-fff,@color,@color);
+  }
+}
+//默认白色背景
+[data-type=default][plain]{
+  .type-color(@color,@color-fff,@color,4px);
+  &:hover{
+    .type-hover(@color,@color-fff,@color);
+  }
+}
+[data-type=default][plain][round]{
+  .type-color(@color,@color-fff,@color,20px);
+  &:hover{
+    .type-hover(@color,@color-fff,@color);
+  }
+ }
+[data-type=default][normal]{
+  .type-color(@color,@color-fff,@color,4px);
+  &:hover{
+    .type-hover(@color, @color-bg,@color);
+  }
+}
+[data-type=default][normal][round]{
+  .type-color(@color,@color-fff,@color,20px);
+  &:hover{
+    .type-hover(@color, @color-bg,@color);
+  }
+}
+//信息按钮
+[data-type=info][normal]{
+  .type-color(@color-fff,@color60,@color60,4px);
+  &:hover{
+    .type-hover(@color-fff,@color-nav,@color-icon);
+  }
+}
+[data-type=info][normal][round]{
+  .type-color(@color-fff,@color60,@color60,20px);
+  &:hover{
+    .type-hover(@color-fff,@color-nav,@color-icon);
+  }
+}
+[data-type=info][plain]{
+  .type-color(@color60,@color-bg,@color60,4px);
+  &:hover{
+    .type-hover(@color60,@colorf5,@color60);
+  }
+}
+[data-type=primary][plain][round]{
+  .type-color(@color60,@color-bg,@color60,20px);
+  &:hover{
+    .type-hover(@color60,@colorf5,@color60);
+  }
+}
+
+//警告颜色
+[data-type=warning][normal]{
+  .type-color(@color-fff,@color-waring,@color-waring,4px);
+  &:hover{
+    .type-hover(@color-fff,@color-waring-bg1,@color-waring-bg1);
+
+  }
+}
+[data-type=warning][normal][round]{
+  .type-color(@color-fff,@color-waring,@color-waring,20px);
+  &:hover{
+    .type-hover(@color-fff,@color-waring-bg1,@color-waring-bg1);
+
+  }
+}
+[data-type=warning][plain]{
+  .type-color(@color-waring,@color-waring-bg2,@color-waring,4px);
+  &:hover{
+    .type-hover(@color-fff,@color-waring,@color-waring);
+  }
+}
+
+[data-type=warning][plain][round]{
+  .type-color(@color-waring,@color-waring-bg2,@color-waring,20px);
+  &:hover{
+    .type-hover(@color-fff,@color-waring,@color-waring);
+  }
+}
+//危险、删除颜色
+
+[data-type=danger][normal]{
+  .type-color(@color-fff,@color-f3,@color-f3,4px);
+  &:hover{
+    .type-hover(@color-fff,@color-f3-h,@color-f3-h);
+  }
+}
+[data-type=danger][normal][round]{
+  .type-color(@color-fff,@color-f3,@color-f3,20px);
+  &:hover{
+    .type-hover(@color-fff,@color-f3-h,@color-f3-h);
+  }
+}
+[data-type=danger][plain]{
+  .type-color(@color-f3,@color-f3-bg,@color-f3,4px);
+  &:hover{
+    .type-hover(@color-fff,@color-f3,@color-f3);
+  }
+}
+[data-type=danger][plain][round]{
+  .type-color(@color-f3,@color-f3-bg,@color-f3,20px);
+  &:hover{
+    .type-hover(@color-fff,@color-f3,@color-f3);
+  }
+}
+//成功的颜色
+[data-type=success][normal]{
+  .type-color(@color-fff,@color-success,@color-success,4px);
+  &:hover{
+    .type-hover(@color-fff,@color-success-h,@color-success-h);
+
+  }
+}
+[data-type=success][normal][round]{
+  .type-color(@color-fff,@color-success,@color-success,20px);
+  &:hover{
+    .type-hover(@color-fff,@color-success-h,@color-success-h);
+
+  }
+}
+
+[data-type=success][plain]{
+  .type-color(@color-success,@color-success-bg,@color-success,4px);
+  &:hover{
+    .type-hover(@color-fff,@color-success,@color-success);
+  }
+}
+[data-type=success][plain][round]{
+  .type-color(@color-success,@color-success-bg,@color-success,20px);
+  &:hover{
+    .type-hover(@color-fff,@color-success,@color-success);
+  }
+}
+
+//禁用颜色按钮
+[data-type=disabled][normal],[data-type=disabled][plain]{
+  .disabled-color(@colorc0,@colorf5,@colore4);
+}
+[data-type=default][circle]{
+  .type-color(@color,@color-fff,@color,50%);
+  width:@size1 * 36;
+  height:@size1 * 36;
+  &:hover{
+    .type-hover(@color,@color-fff,@color);
+  }
+}
+[data-type=primary][circle]{
+  .type-color(@color-fff,@color,@color,50%);
+  width:@size1 * 36;
+  height:@size1 * 36;
+  &:hover{
+    .type-hover(@color-fff,@color-h,@color-66);
+  }
+}
+[data-type=info][circle]{
+  .type-color(@color-fff,@color60,@color60,50%);
+  width:@size1 * 36;
+  height:@size1 * 36;
+  &:hover{
+    .type-hover(@color-fff,@color-nav,@color-icon);
+  }
+}
+[data-type=warning][circle]{
+  .type-color(@color-fff,@color-waring,@color-waring,50%);
+  width:@size1 * 36;
+  height:@size1 * 36;
+  &:hover{
+    .type-hover(@color-fff,@color-waring-bg1,@color-waring-bg1);
+  }
+}
+[data-type=danger][circle]{
+  .type-color(@color-fff,@color-f3,@color-f3,50%);
+  width:@size1 * 36;
+  height:@size1 * 36;
+  &:hover{
+    .type-hover(@color-fff,@color-f3-h,@color-f3-h);
+  }
+}
+[data-type=success][circle]{
+  .type-color(@color-fff,@color-success,@color-success,50%);
+  width:@size1 * 36;
+  height:@size1 * 36;
+  &:hover{
+    .type-hover(@color-fff,@color-success-h,@color-success-h);
+  }
+}
+.btn-group {
+  .btn{
+    min-width: 2.25rem;
+    border: 1px solid #eee !important;
+    height: 2.5rem;
+    line-height: 1.25rem;
+  }
+}

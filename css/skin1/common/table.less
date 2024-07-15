@@ -1,0 +1,466 @@
+@import "theme.less";
+.tableScrollRow{
+  overflow: auto;
+  padding: 0 @size1 * 30;
+  position: relative;
+}
+.tableScrollControl{
+  height: auto !important;
+  // 滚动条整体部分
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  // 滚动条的轨道的两端按钮，允许通过点击微调小方块的位置。
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+  // 滚动条里面的小方块，能向上向下移动（或往左往右移动，取决于是垂直滚动条还是水平滚动条）
+  &::-webkit-scrollbar-thumb {
+    //background: rgba(144, 147, 153, 0.3);
+    cursor: pointer;
+    //border-radius: 4px;
+  }
+  // 边角，即两个滚动条的交汇处
+  &::-webkit-scrollbar-corner {
+    display: none;
+  }
+  // 两个滚动条的交汇处上用于通过拖动调整元素大小的小控件
+  &::-webkit-resizer {
+    display: none;
+  }
+}
+
+.tableScrollRow{
+  overflow: auto;
+  padding: 0 !important; ;
+  border-right: 2px solid #f2f2f2;
+  border-left: 2px solid #f2f2f2;
+}
+
+
+
+//分页
+
+/* start of style: paginationControl */
+.form-footer{
+  background:transparent;
+  position: absolute;
+  bottom:0;
+  right:0;
+  height:@size1 * 96;
+  display: flex;
+  flex-wrap: wrap;
+  left: 0;
+}
+.paginationControl {
+  width: 100%;
+  display: flex;
+  justify-content	: flex-end;
+  align-items: center;
+  font-size: @size1 * 16;
+  .control {
+  display: flex;
+    align-items: center;
+  }
+  .info {
+    margin-right: @size1 * 10;
+    margin-left: @size1 * 5;
+  }
+
+  .totalPageDis,.totalAmountDis{
+    color: @color;
+    font-weight: bold;
+    margin: 0 @size1 * 5;
+  }
+}
+.small {
+  .control{
+    font-size: 85%;
+  }
+}
+.paginationControl>.control .pageIndexBtn, .paginationControl>.control .pageExtendBtn,
+.paginationControl>.control .prePageBtn, .paginationControl>.control .nextPageBtn{
+  min-width: @size1 * 36;
+  border:1px solid #ccc;
+  height: @size1 * 40;
+  line-height: @size1 * 20;
+}
+
+.paginationControl>.control .pageIndexBtn.pageIndexBtnCurrent {
+  background-color:@color;
+  color:white;
+  border: 0;
+  line-height:@size1 * 20;
+}
+
+.paginationControl>.control>.pagination-option, .paginationControl>.control>.pagination-go{
+  //margin-left: @size1 * 8;//去掉暂时没影响 保留是有错位
+  display: inline-block;
+  //vertical-align: middle;
+}
+
+.paginationControl>.control>.pagination-go>input.goPageId {
+  width: @size1 * 50;
+  height: @size1 * 40;
+  // vertical-align: bottom;
+}
+
+.paginationControl>.control>.pagination-go>.redirectPageBtn{
+  padding: 0;
+  height: @size1 * 40;
+  margin-top: -@size1 * 5;
+}
+.paginationControl>.control>.pagination-option>select {
+  background-color: white;
+  margin:0  @size1 * 5 0 @size1 * 5;
+  outline: none;
+  padding: 0;
+  height: @size1 * 40;
+}
+
+.paginationControl>.control>.pagination-go>input {
+  display: inline-block;
+  margin-right:@size1 * 5;
+}
+
+.paginationControl .pageSizeSelect{
+  border:1px solid #eee;
+}
+
+.deleteControl{
+  float: left;margin-left:@size1 * 12;
+}
+/* end of style: paginationControl */
+
+.table-body {
+  padding: @size1 * 12;
+  max-height: 100%;
+  clear: both;
+  position: relative;
+  .row {
+    margin: 0;
+    border-bottom: 1px solid #e9e9e9;
+    text-align: left;
+    overflow: hidden;
+    //padding:0 @size1 * 12;
+    & .table-left {
+      text-align: left;
+      padding-left: @size1 * 10;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-all;
+    }
+    &:hover{
+      background: rgba(235,247,255,1);
+      transition: .2s ease-in-out;
+    }
+    &.datas-columns{
+      overflow: auto;
+      background-color: #f5f7fa;
+      line-height: @size1 * 48;
+      position: relative;
+      padding:@size1 * 1 0 @size1 * 1 @size1 * 60;
+      [class*=col-xs-]{
+        padding-left: @size1 * 15;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        &.text-center{
+          padding-left: 0 !important;
+        }
+        .switch-wrapper {
+          .switch-wrapper-btn{
+            margin-top: 0 !important;
+          }
+        }
+      }
+      .maxwidth60{
+        position: absolute;left: 0;
+        padding-left: 0;
+        text-align: center;
+        width: @size1 * 60;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+      }
+    }
+  }
+  .hand{
+    [class*=col-xs-]{
+      line-height: @size1 * 32;
+      min-height: @size1 * 32;
+      height: @size1 * 32;
+      font-size: @size1 * 18;
+      a{
+        //padding: 0 5px;
+      }
+
+    }
+  }
+
+  .datas{
+    //64px 分页间距
+    //max-height:calc(100% - @size1 * 80);
+    overflow-y: auto;
+    max-height: calc(100% - @size1 * 48);
+    [class*=col-xs-]{
+      //line-height: @size1 * 48;
+      font-size: @size1 * 18;
+      .btn{
+        min-width: @size1 * 48;
+        line-height: @size1 * 20;
+        height: @size1 * 44;
+        padding: 0 @size1 * 8;
+      }
+      &.text-center{
+        padding-left: 0 !important;
+        .btn{
+          min-width: @size1 * 48;
+          line-height: @size1 * 16;
+          height: @size1 * 38;
+          padding: 0 @size1 * 10;
+        }
+      }
+
+      button{
+        margin:0 @size1 * 3;
+      }
+      .switch-wrapper{
+        padding-top: @size1 * 5;
+      }
+    }
+
+    .row{
+      padding-left:@size1 * 60;
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      [class*=col-xs-]{
+        padding-left: @size1 * 15;
+
+        min-height:@size1 * 48;
+        display: flex;
+        align-items: center;
+        span{
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          align-items: center;
+          float: left;
+        }
+
+      }
+
+      .text-center{
+        padding-left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .maxwidth60{
+        position: absolute;left: 0;
+        padding-left: 0;
+        text-align: center;
+        width: @size1 * 60;
+        line-height:@size1 * 48 ;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      [copy]{
+        position: relative;
+        padding-left: 2.2rem !important;
+        &:after{
+          font-family: "Font Awesome 6 Pro";
+          content: "\f0c5";
+          left:0.75rem;
+          position: absolute;
+          z-index: 111;
+        }
+      }
+    }
+    .hand{
+      border-left: 0;
+      [class*=col-xs-]{
+        border-right: 0;
+        line-height: @size1 * 32;
+        height:  @size1 * 32;
+        padding: 0;
+      }
+      span{
+        padding: 0;
+        border: 0;
+      }
+    }
+
+  }
+
+  /*
+  *
+  *滚动条阴影
+  */
+
+  .shadow-right {
+    box-shadow: inset -30px 0 20px -20px #ebecf0, inset 30px 0 30px -20px #ebecf0;
+  }
+
+  .shadow-left {
+    box-shadow: inset 30px 0 30px -20px #ebecf0, inset -30px 0 20px -20px #ebecf0;
+  }
+
+  .box-right {
+    box-shadow: inset -10px 0 10px -10px #ebecf0, inset 10px 0 10px -10px #ebecf0;
+  }
+
+  .box-left {
+    box-shadow: inset 10px 0 10px -10px #ebecf0, inset -10px 0 10px -10px #ebecf0;
+  }
+  .container{
+    margin: 0;
+    min-width:@size1 * 1500;
+    width: auto;
+    padding: 0;
+  }
+
+}
+
+.table-body[border]{
+  .datas-columns{
+    border: 1px solid #e9e9e9;
+    border-right: 0;
+    padding:0 0  0 @size1 * 60;
+    position: relative;
+    [class*=col-xs-]{
+      border-right: 1px solid #e9e9e9;
+      border-bottom: 0;
+      padding-left: @size1 * 15;
+    }
+    .maxwidth60{
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding-left: 0;
+      width: @size1 * 60;
+      line-height:@size1 * 48 ;
+      min-height: @size1 * 48;
+      text-align: center;
+      border-right: 1px solid #e9e9e9;
+    }
+
+    //.maxwidth60, .maxwidth40{
+    // max-width: 8.33333%;
+    //}
+  }
+  .datas{
+    .row{
+      padding:0 0  0 @size1 * 60;
+      position: relative;
+      border-left: 1px solid #e9e9e9;
+      [class*=col-xs-]{
+        border-right: 1px solid #e9e9e9;
+        border-top: 0;
+        padding-left: @size1 * 15;
+      }
+      .maxwidth60{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: @size1 * 60;
+        border-right: 1px solid #e9e9e9;
+        text-align: center;
+        height: 100%;
+        line-height: 100%;
+        padding: @size1 * 6 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      //.maxwidth60, .maxwidth40{
+      //  max-width: 8.33333%;
+      //}
+    }
+    .hand{
+      border-left: 0;
+      [class*=col-xs-]{
+        border-right: 0;
+        line-height: @size1 * 32;
+        height:  @size1 * 32;
+        padding: 0;
+      }
+      span{
+        padding: 0;
+        border: 0;
+      }
+    }
+  }
+}
+
+.table-body[stripe]{
+  .datas{
+    .row{
+      &:nth-child(2n){
+        background: #f8f8f9;
+      }
+      &:hover{
+        background: rgba(235,247,255,1);
+        transition: .2s ease-in-out;
+      }
+    }
+  }
+}
+.table-body.text-center{
+  .datas-columns{
+    [class*=col-xs-]{
+      text-align: center;
+      padding-left: 0;
+    }
+    .maxwidth60{
+      padding-left: 0;
+    }
+  }
+  .datas{
+    .row{
+      [class*=col-xs-]{
+        text-align: center;
+        padding-left: 0;
+        justify-content: center;
+      }
+      .maxwidth60{
+        padding-left: 0;
+      }
+    }
+  }
+}
+//去掉table的index的默认padding
+.table-body[no-index] {
+  .row{
+    &.datas-columns{
+      padding-left: 0;
+    }
+  }
+  .datas{
+    .row{
+      padding-left: 0;
+    }
+  }
+}
+.float-dialog-holder{
+  .table-body{
+    padding: 0;
+  }
+}
+.table-body{
+  .datas-columns{
+    &[center]{
+      text-align: center;
+      [class*=col-xs-]{
+        padding-left: 0;
+      }
+    }
+  }
+  ::-webkit-scrollbar {
+    width: @size1 * 2;
+  }
+}

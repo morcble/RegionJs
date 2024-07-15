@@ -1,0 +1,58 @@
+var TimePickerPlugin = {
+		render:function(region,tmpObj,paraData){
+			var width = tmpObj.attr("width");
+			tmpObj.addClass("wrapped");
+
+			var replaceHtml = '<div class="timepicker-wrapper region-wrapper">'+tmpObj.prop("outerHTML");
+			replaceHtml+='<div></div>'
+			replaceHtml+='</div>';
+			
+			var replaced = $(replaceHtml);
+			RegionUtil.addRegionUniqueId(replaced[0],region.regionId);
+			tmpObj.replaceWith(replaced);
+			
+			if(width!=null){
+				replaced.css("width",width);
+			}
+			
+			
+			
+			tmpObj = replaced.find(".wrapped");
+			
+
+			var formatStr = tmpObj.attr("format");
+			if(formatStr==null||formatStr==""){
+				formatStr = "HH:mm:ss";
+			}
+			tmpObj.attr("placeholder",formatStr);
+			
+			
+			tmpObj.click(function(event){
+				var timeInput = $(this);
+				if(timeInput.attr("time-shown")=="1"){//日历已经展示
+					return;
+				}
+				timeInput.attr("time-shown","1");
+				var formatStr = timeInput.attr("format");
+				var initTimeStr = timeInput.val().trim();//初始化时间
+				
+				var timeFormat = timeInput.attr("placeholder");
+				
+				var hideSeconds = false;//隐藏秒
+				if(timeFormat.indexOf("ss")==-1){
+					hideSeconds = true;
+				}
+				//判断显示在控件上方还是下方
+				var event = window.event || arguments.callee.caller.arguments[0];
+				var bottomGap = (document.body.clientHeight-event.clientY-replaced.outerHeight(true));
+				var regionTime = new RegionTime(replaced,initTimeStr,timeFormat,bottomGap,hideSeconds);
+			});
+			
+			tmpObj.val(paraData);
+			return tmpObj;
+		},
+		updateVal:function(region,wrapperElemObj,regionElemObj,paraData){//值改变调用此函数
+			regionElemObj.val(paraData);
+			
+		}
+}

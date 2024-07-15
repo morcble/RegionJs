@@ -1,0 +1,186 @@
+<style type="text/css">
+#REGION .icon{
+	float: right;
+}
+
+#REGION .form-wrap{
+	height: 100%;
+}
+
+#REGION .panel-title{
+	display: inline-block;
+}
+
+#REGION .form-title {
+	margin-top: 0px;
+}
+
+#REGION .common-tree{
+	height:calc(100% - 2.5rem);
+    overflow: auto;
+}
+
+#REGION .form-info{
+	padding: 0.15rem 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#REGION .form-body{
+	padding:  0;
+}
+#REGION .form-item-public .region-wrapper{
+	padding-right: 0;
+}
+
+</style>
+
+<div id="REGION" class="hidden">
+			<!-- 灌区管理 -->
+	<div class="form-body" border >
+		<div class="col-xs-12 form-item-public">
+			<label class="form-label">所选灌区</label>
+			<select region-attr="irrareaId" class="region-editable"  region-ds="IrrareaList" onchange="REGION.changeIrrarea">
+			</select>
+		</div>
+	</div>
+
+			<div class="form-info form-title" >
+				<div class="title form-text"></div>
+					<i class="fa fa-plus grid-plus" title="add" onclick="REGION.addLevelOne(event);"></i>
+			</div>
+
+			<div >
+				<input type="text" class="form-control" placeholder="输入关键字搜索" oninput="REGION.filterTree(event)">
+			</div>
+
+			<div class="common-tree"></div>
+</div>
+
+
+
+<script type="text/javascript">
+var REGION = {
+		changeIrrarea:function(val){
+			var curRegion = RegionUtil.getRegionByElem(this);
+			curRegion.selectIrrarea();
+		},
+		selectIrrarea:function(){
+			var curRegion = this;
+			curRegion.irrareaId = curRegion.getIrrareaId();
+			var treeRegionId = curRegion.regionId+"_tree";
+			curRegion.treeRegionId = treeRegionId;
+
+			var outerRegion = RegionUtil.getOuterRegion(curRegion);
+			outerRegion.irrAreaId = curRegion.irrareaId;
+			var reqObj = new Object();
+			reqObj.spId = outerRegion.treeSpId;
+			reqObj.module = outerRegion.treeModule;
+			reqObj.irrAreaId = curRegion.irrareaId;
+
+			RegionUtil.call(outerRegion.treeRes,"POST",reqObj,function(serverResponse,dataPara){
+				if(serverResponse.success){
+					var listData = serverResponse.data;
+					for(var i = 0 ;i<listData.length;i++){
+						listData[i].pid = listData[i].pid;
+						listData[i].label = listData[i].label;
+					}
+					curRegion.treeRegion.treeData = listData;
+					curRegion.treeRegion.renderMenu(listData);
+					outerRegion.find(".content").empty();
+
+				}
+			})
+		},
+		filterTree:function(event){
+			var targetElem = RegionUtil.getEventTarget(event);
+			var curRegion = RegionUtil.getRegionByElem(targetElem);
+
+			var treeRegion = RegionUtil.getRegionById(curRegion.treeRegionId);
+			treeRegion.filterNode($(targetElem).val());
+		},
+		afterRenderData:function(){
+			var curRegion = this;
+			curRegion.selectIrrarea = REGION.selectIrrarea;
+
+			var outerRegion = RegionUtil.getOuterRegion(curRegion);
+
+			if(!curRegion.inited)curRegion.inited = true;else return;
+
+			curRegion.find(".title").text(outerRegion.treeTitle);
+
+			var treeRegionId = curRegion.regionId+"_tree";
+			curRegion.treeRegionId = treeRegionId;
+
+			var reqObj = new Object();
+			reqObj.spId = outerRegion.treeSpId;
+			reqObj.module = outerRegion.treeModule;
+			reqObj.irrAreaId = curRegion.irrareaId;
+
+			var regionLoadedDefer = new jQuery.Deferred();
+			RegionUtil.call(outerRegion.treeRes,"POST",reqObj,function(serverResponse,dataPara){
+				if(serverResponse.success){
+					var listData = serverResponse.data;
+					for(var i = 0 ;i<listData.length;i++){
+						listData[i].pid = listData[i].pid;
+						listData[i].label = listData[i].label;
+					}
+
+					var def = RegionUtil.loadRegion(curRegion.find(".common-tree"),"common/shared/tree/simple-tree-new.rs?showDots=false",treeRegionId);
+		            def.done(function(treeRegion){
+						curRegion.treeRegion = treeRegion;
+		                treeRegion.treeData = listData;
+		                regionLoadedDefer.resolve();
+		            });
+				}
+			})
+			return regionLoadedDefer.promise();
+		},
+		addLevelOne:function(event){
+			var curRegion = RegionUtil.getRegionByEvent(event);
+			var parentRegion = RegionUtil.getOuterRegion(curRegion);
+			parentRegion.addLevelOne(curRegion);
+		}
+};
+
+RegionUtil.ready(function(){
+	// var staticRegion = RegionUtil.newStaticRegion("#REGION");
+
+	var res = {
+		message:{
+			dft:{
+				spId:"spId",
+			}
+		},
+		dataList:{
+			dft:{
+			}
+		}
+	};
+
+	var firstId = '999999';
+	var promise = RegionUtil.call(Config.backendPath+"/RCS_Project/irrarea/list-without-pagination","POST",null,function(data,dataPara){
+		var options = [];
+		for (var i=0;i<data.data.length;i++)
+		{
+			if(i==0){
+				firstId = data.data[i].id;
+			}
+			options.push({"text":data.data[i].name,"value":data.data[i].id});
+		}
+		res.dataList.dft.IrrareaList= options;
+	});
+
+	promise.done(function(){
+		var staticRegion = RegionUtil.newFormRegion("#REGION",res);
+		staticRegion.afterRenderData = REGION.afterRenderData;
+		staticRegion.irrareaId=firstId;
+		staticRegion.renderRegion();
+		staticRegion.setIrrareaId(firstId);
+
+
+
+	})
+})
+</script>

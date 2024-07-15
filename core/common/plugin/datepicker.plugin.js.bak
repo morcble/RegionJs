@@ -1,0 +1,112 @@
+var DatepickerPlugin = {
+		specialDays:[],//全局配置special day
+		render:function(region,tmpObj,paraData){
+			var minDate = tmpObj.attr("min-date");
+			var maxDate = tmpObj.attr("max-date");
+			
+			var width = tmpObj.attr("width");
+			tmpObj.addClass("wrapped")
+			var replaceHtml = "<div class='calendar-wrapper region-wrapper'>"+tmpObj.prop("outerHTML");
+			replaceHtml+='<div class="calendar-icon"><i class="fa-light fa-calendar-alt"></i></div>';
+			replaceHtml+='</div>';
+			var replaced = $(replaceHtml);
+			RegionUtil.addRegionUniqueId(replaced[0],region.regionId);
+			tmpObj.replaceWith(replaced);
+			
+			
+			if(width!=null){
+				replaced.css("width",width);
+			}
+			
+			tmpObj = replaced.find(".wrapped");
+			
+			tmpObj.click(function(){
+				replaced.find(".calendar-icon").click();
+			});
+			
+			if(tmpObj.hasClass("disabled")){
+				replaced.addClass("disabled");
+			}
+			replaced.find(".calendar-icon").click(function(){
+				var calendarWrapperObj = replaced;
+				var dateInput = calendarWrapperObj.find(".date");
+				if(dateInput.attr("date-shown")=="1"){//日历已经展示
+					calendarWrapperObj.find(".calendar").remove();
+					dateInput.attr("date-shown",null);
+					
+					calendarWrapperObj.css("z-index",100);
+					return;
+				}
+				dateInput.attr("date-shown","1");
+				var formatStr = dateInput.attr("format");
+				var initDateValue = dateInput.val().trim();//初始化时间
+				
+				var locale = dateInput.attr("locale");
+				if(formatStr==null)formatStr="YYYY-MM-DD";
+				if(locale==null){
+					locale=Config.locale;
+				}
+				
+				
+				var specialDaysPara = {};
+				for(var i = 0 ; i< DatepickerPlugin.specialDays.length;i++){
+					specialDaysPara[dateConfig.specialDays[i].date]=dateConfig.specialDays[i];
+				}
+				var dateConfig = region.getAttrConfig([replaced.find(".wrapped").attr("region-attr")]);
+				if(dateConfig!=null&&dateConfig.specialDays!=null){
+					for(var i = 0 ; i< dateConfig.specialDays.length;i++){
+						specialDaysPara[dateConfig.specialDays[i].date]=dateConfig.specialDays[i];
+					}
+				}
+				
+				//判断显示在控件上方还是下方
+				var event = window.event || arguments.callee.caller.arguments[0];
+				var coverWindow = replaced.closest(".cover-window");
+				var bottomGap;
+				var topGap;
+				if(coverWindow.length==1){//在弹窗内
+					bottomGap = (coverWindow.outerHeight(true)+coverWindow[0].offsetTop-event.clientY-replaced.outerHeight(true));
+					topGap = RegionUtil.getDomPosition(replaced[0]).y - RegionUtil.getDomPosition(coverWindow[0]).y;
+				}
+				else{
+					bottomGap = (document.body.clientHeight-event.clientY-replaced.outerHeight(true));
+					topGap = RegionUtil.getDomPosition(replaced[0]).y;
+				}
+				if(topGap<bottomGap)bottomGap=1000;//显示在下方
+				
+	
+				var regionDate = new RegionDate(replaced,locale,initDateValue,formatStr,specialDaysPara,function(date){		
+					var chosenDateStr = moment().year(date.year).month(date.month-1).date(date.day).format(formatStr);
+					dateInput.val(chosenDateStr);
+					calendarWrapperObj.find(".calendar").remove();
+					dateInput.attr("date-shown",null);
+					
+					//replaced.css("height","auto");
+					//replaced.css("width","auto");
+					//replaced.css("position","relative");
+					
+					if(typeof region.onDayClick==="function"){
+						region.onDayClick(chosenDateStr);
+					}
+					
+					var onchange = calendarWrapperObj.find(".wrapped").attr("onchange")
+					if(onchange!=null&&onchange!=""){
+						eval(onchange+'.call(calendarWrapperObj,chosenDateStr,calendarWrapperObj)');
+						//eval(onchange+"('"+newVal+"')");
+					}
+				},bottomGap,minDate,maxDate);
+			});
+			
+			
+			
+			var width = tmpObj.attr("width");
+			if(width!=null){
+				tmpObj.css("width",width);
+			}
+			tmpObj.val(paraData);
+			return tmpObj;
+		},
+		updateVal:function(region,wrapperElemObj,regionElemObj,paraData){//值改变调用此函数
+			regionElemObj.val(paraData);
+		}	
+}

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./assets/fontawesome/css/all_pro.css">
+</head>
+<style type="text/css">
+    body {
+        margin: 0;
+        padding: 0;
+        background:transparent;
+    }
+
+    .REGION_customized {
+        /* margin: 0 20px; */
+        padding: 20px 0;
+        box-sizing: border-box;
+        overflow: hidden;
+        max-height: 100%;
+    }
+
+    .font-content {
+        display: flex;
+        flex-wrap: wrap;
+        border: 1px solid #e9e9e9;
+        border-right: 0;
+        margin-top: 20px;
+        width:99%;
+        height:calc(100% - 160px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        /* justify-content: space-between; */
+    }
+
+    .font-group {
+    	word-break: break-all;
+        font-size: 36px;
+        padding: 30px 10px 20px 10px;
+        text-align: center;
+        width:calc((100% - 200px) / 11);
+        transition: all .3s linear;
+        background: #fff;
+        border-bottom:1px solid #e9e9e9;
+        border-right: 1px solid #e9e9e9;
+        color: #555;
+        box-sizing: border-box;
+        height: 185px;
+    }
+
+    h2 {
+        padding: 0 20px;
+    }
+
+    .font-icon {
+        height: 50px;
+        line-height: 50px;
+        pointer-events: none;
+        font-size: inherit;
+    }
+
+    .font-name {
+    	padding:0px 0px !important;
+        font-size: 20px;
+        height: 40px;
+        pointer-events: none;
+    }
+
+    .font-group:hover {
+        cursor: pointer;
+        background:linear-gradient(to left, rgba(40, 50, 200, 0.8) 0%, #2832c8 100%) !important;
+        color: #fff;
+        transition: all 0.05s ease-in-out;
+        transform: scale(1.2);
+        box-shadow:0px -1px 8px rgba(0,0,0,.5);
+    }
+
+    .font-group:hover .font-icon {
+        transform: scale(1.2);
+    }
+
+    .label {
+        display: none;
+    }
+
+    input {
+        width:30%;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: transparent;
+        border: 1px solid #ccc !important;
+        font-size: 2rem !important;
+    }
+
+    .search-box {
+        width:100%;
+        position: relative;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+    .search-box > .search-title{
+        font-size: 30px;
+        width: 165px;
+        padding-top:17px;
+    }
+
+    .search-box .fa-search {
+        line-height: 50px;
+   		margin-left: -40px;
+        font-size: 30px;
+    }
+
+    .search-box .fa-search:hover {
+        cursor: pointer;
+        color: #008cff;
+    }
+
+    .tabs {
+        margin-top: 20px;
+        background: #fff;
+        padding: 0 20px;
+        width: 100%;
+    }
+
+    .tabs .tab {
+        min-width: 100px;
+        text-align: center;
+        display: inline-block;
+        padding: 20px;
+        font-size: 25px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .tabs .tab:hover {
+        cursor: pointer;
+        color: #008cff;
+    }
+
+    .tabs .tab.active {
+        font-weight: bold;
+        color: #008cff;
+        border-bottom: 2px solid #008cff;
+    }
+
+    .REGION_customized{
+        background:#fff;
+    }
+    .theme-dark > .REGION_customized{
+        background:rgba(8, 31,88, 1);
+    }
+    .theme-dark > .REGION_customized input{
+        border: 1px solid #a8c6ef;
+    }
+
+    .theme-dark >.REGION_customized > .search-input {
+        background:#0b3b84 ;
+        border: 1px solid #00a1ff;
+        color:#a8c6ef ;
+    }
+
+    .theme-dark > .REGION_customized > .search-box {
+        color:#a8c6ef;
+    }
+    .theme-dark > .REGION_customized > .tabs{
+        background:#0b3b84;
+        color:#a8c6ef;
+    }
+    .theme-dark > .REGION_customized > .tabs .tab {
+        border-bottom: 1px solid #0b3b84;
+    }
+    .theme-dark > .REGION_customized .tabs .tab:hover {
+        cursor: pointer;
+        color: #00ffff;
+    }
+    .theme-dark > .REGION_customized > .tabs .tab.active {
+        font-weight: bold;
+        color: #00ffff !important;
+        border-bottom: 2px solid #00ffff;
+    }
+    .theme-dark > .REGION_customized > .font-content {
+        border: 1px solid #00a1ff;
+        border-right: 0;
+    }
+    .theme-dark > .REGION_customized >.font-content > .font-group{
+        background:#0b3b84;
+        color:#a8c6ef;
+        border-bottom:1px solid #00a1ff;
+        border-right: 1px solid #00a1ff;
+    }
+    .theme-dark > .REGION_customized >.font-content > .font-group:hover {
+        cursor: pointer;
+        background:rgba(8, 31,88, 1) !important;
+        color: #fff;
+    }
+    ::-webkit-scrollbar {
+        width:16px !important;
+    }
+</style>
+
+<body style="zoom:0.7">
+    <div class="REGION_customized">
+        <div class="search-box">
+<!--             <div class="search-title">字体图标库</div> -->
+            <input id="search" class="search-input" placeholder="输入你要搜索的图标名称..." type="text" onkeyup="REGION.search(event,'keyup')">
+            <div class="fa-solid fa-search"></div>
+        </div>
+        <div id="tabs" class="tabs">
+        </div>
+        <div class="font-content">
+
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript" id="configjs" src="/core/config.js"></script>
+<script type="text/javascript" src="./assets/clipboard/dist/clipboard.min.js"></script>
+<script type="text/javascript" src="./js/getFileList.js"></script>
+<!--<script type="text/javascript" src="/libs/jquery/jquery-1.12.4.min.js"></script>-->
+<!--<script type="text/javascript" src="/js/theme.js"></script>-->
+
+<script type="text/javascript">
+    var REGION = {
+        typeList: ["solid", "regular", "light", "thin", "duotone", "brands"],
+        currentType: "solid",
+        fontList: [],
+        init() {
+            this.fontList = [..._fontList];
+            this.renderTabs();
+            this.renderIcons(this.currentType);
+            this.addTabEvent();
+            this.addIconEvent();
+           setTimeout(()=>{
+               themeUtil.theme();
+           })
+        },
+        renderTabs() {
+            let _html = "";
+            this.typeList.forEach(v => {
+                if (v == this.currentType) {
+                    _html += `<div class="tab active">${v}</div>`
+                } else {
+                    _html += `<div class="tab">${v}</div>`
+                }
+            })
+            document.querySelector("#tabs").innerHTML = _html;
+        },
+        renderIcons(type) {
+            document.querySelector(`.font-content`).innerHTML = "";
+            let _html = "";
+            this.fontList.forEach(v => {
+                _html += `<div class="font-group" title="点击复制" type="${type}" data="${v}">
+                    <div class="font-icon fa-${type} ${v}"></div>
+                    <div class="font-name" onclick="">${v}</div>
+                </div>`
+            })
+            document.querySelector(`.font-content`).innerHTML = _html;
+        },
+        addTabEvent() {
+            document.querySelector(".tabs").addEventListener("click", e => {
+                if (e.target.classList.contains("tab")) {
+                    let tab = e.target;
+                    if (tab.classList.contains("active")) {
+                        return;
+                    } else {
+                        document.querySelector(".tab.active").classList.remove("active");
+                        REGION.currentType = tab.innerHTML;
+                        if (REGION.currentType == "brands") {
+                            REGION.fontList = [..._brandsFontList];
+                        } else {
+                            REGION.fontList = [..._fontList];
+                        }
+                        tab.classList.add("active");
+                        // REGION.renderIcons(REGION.currentType);
+                        REGION.search(e, 'click');
+                    }
+                }
+            })
+        },
+        addIconEvent(){
+            let clipboard = null;
+            document.querySelector(".font-content").addEventListener("click", e => {
+                if (e.target.classList.contains("font-group")) {
+                    let icon = e.target;
+                    let name = icon.getAttribute("data");
+                    let type = icon.getAttribute("type");
+                    clipboard = new ClipboardJS(icon, {
+                        text: () => `<i class="fa-${type} ${name}"></i>`,
+                    })
+                    clipboard.on('success', function (e) {
+                        alert("复制成功");
+                        e.clearSelection();
+                        clipboard.destroy();
+                    });
+                    clipboard.on('error', function (e) {
+                        // alert("复制失败")
+                        console.error('Action:', e.action);
+                        console.error('Trigger:', e.trigger);
+                    });
+
+                    clipboard.onClick(e)
+                }
+            })
+        },
+        search(e, type) {
+            let value = document.querySelector("#search").value;
+            if (e && (e.keyCode === 13 || type === "keyup" || type === "click")) {
+                if (this.currentType == "brands") {
+                    this.fontList = _brandsFontList.filter(v => v.indexOf(value) > -1);
+                } else {
+                    this.fontList = _fontList.filter(v => v.indexOf(value) > -1);
+                }
+                this.renderIcons(this.currentType);
+            }
+        }
+    };
+    REGION.init();
+
+</script>
+
+</html>

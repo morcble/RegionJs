@@ -1,0 +1,205 @@
+<style type="text/css">
+#REGION .icon{
+	float: right;
+}
+
+#REGION .form-wrap{
+	height: 100%;
+}
+
+#REGION .panel-title{
+	display: inline-block;
+}
+
+#REGION .form-title {
+	margin-top: 0px;
+}
+#REGION .form {
+	padding: 0px;
+}
+
+#REGION .common-tree{
+	height:calc(100% - 89px);
+    overflow: auto;
+}
+
+#REGION .region-wrapper{
+	padding-left: 10px;
+}
+#REGION .btn{
+	margin-right: 10px;
+	min-width: 68px;
+}
+
+</style>
+
+<div id="REGION" class="hidden">
+	<div class="form-wrap ">
+		<div class="form">
+			<!-- 灌区管理 -->
+				<!-- <div class="col-xs-12 col-md-12 form-item-public  auto-height">
+					<span style="padding: 10px;">所选灌区</span>
+					<select region-attr="irrareaId" class="region-editable"  region-ds="IrrareaList" >
+					</select>
+					<button class="btn"  data-type="primary" normal  onclick="REGION.selectIrrarea(event)"><message key="global_msg.ok"></message></button>
+				</div> -->
+
+
+			<div class="form-info form-title">
+				<div class=" form-text"></div>
+				<div class="toolbar toolbar-theme" onclick="REGION.addLevelOne(event);">
+					保存更改
+				</div>
+			</div>
+
+			<div style="margin:0.5rem">
+				<input type="text" class="form-control" placeholder="输入关键字搜索" oninput="REGION.filterTree(event)">
+			</div>
+
+			<div class="common-tree"></div>
+		</div>
+	</div>
+
+</div>
+
+
+<script type="text/javascript">
+var REGION = {
+		selectIrrarea:function(event){
+			var curRegion = RegionUtil.getRegionByEvent(event);
+			// curRegion.irrareaId = curRegion.getIrrareaId();
+			var treeRegionId = curRegion.regionId+"_tree";
+			curRegion.treeRegionId = treeRegionId;
+
+			var outerRegion = RegionUtil.getOuterRegion(curRegion);
+			outerRegion.irrAreaId = curRegion.irrareaId;
+			var reqObj = new Object();
+			reqObj.spId = outerRegion.treeSpId;			
+			reqObj.module = outerRegion.treeModule;
+			reqObj.irrAreaId = curRegion.paraMap.get("irrareaId");
+			
+			RegionUtil.call(outerRegion.treeRes,"POST",reqObj,function(serverResponse,dataPara){
+				if(serverResponse.success){
+					var listData = serverResponse.data;
+					for(var i = 0 ;i<listData.length;i++){
+						listData[i].pid = listData[i].pid;
+						listData[i].label = listData[i].label;
+					}
+					curRegion.treeRegion.treeData = listData; 
+					curRegion.treeRegion.renderMenu(listData);
+					outerRegion.find(".content").empty();
+					
+				}
+			})
+		},
+		filterTree:function(event){
+			var targetElem = RegionUtil.getEventTarget(event);
+			var curRegion = RegionUtil.getRegionByElem(targetElem);
+
+			var treeRegion = RegionUtil.getRegionById(curRegion.treeRegionId);
+			treeRegion.filterNode($(targetElem).val());
+		},
+		afterRenderData:function(){
+			var curRegion = this;
+			var outerRegion = RegionUtil.getOuterRegion(curRegion);
+			
+			if(!curRegion.inited)curRegion.inited = true;else return;
+
+			curRegion.find(".title").text(outerRegion.treeTitle);
+
+			var treeRegionId = curRegion.regionId+"_tree";
+			curRegion.treeRegionId = treeRegionId;
+
+			var reqObj = new Object();
+			reqObj.spId = outerRegion.treeSpId;			
+			reqObj.module = outerRegion.treeModule;
+			reqObj.irrAreaId = curRegion.paraMap.get("irrAreaId");
+			reqObj.waterUnitId = curRegion.paraMap.get("waterUnitId");
+
+			
+			
+			var regionLoadedDefer = new jQuery.Deferred();
+			RegionUtil.call(outerRegion.treeRes,"POST",reqObj,function(serverResponse,dataPara){
+				if(serverResponse.success){
+					var listData = serverResponse.data;
+					for(var i = 0 ;i<listData.length;i++){
+						listData[i].pid = listData[i].pid;
+						listData[i].label = listData[i].label;
+
+						listData[i].id = listData[i].id;
+						listData[i].parentNodeId = listData[i].pid;
+						listData[i].expand = false;
+
+					}
+
+		// 			{
+		// 	"id": "4_1",
+		// 	"icon": "fa-file-word-o",
+		// 	"label": "布局",
+		// 	"value": "samples/widget/layout-sample.rs",
+		// 	"parentNodeId": "4",
+		// 	"expand": false
+		// }
+
+
+					// common/shared/tree/simple-tree.rs
+					// var def = RegionUtil.loadRegion(curRegion.find(".common-tree"),"common/shared/tree/simple-tree-new.rs?showDots=false",treeRegionId);
+		            // def.done(function(treeRegion){
+					// 	curRegion.treeRegion = treeRegion;
+		            //     treeRegion.treeData = listData;
+		            //     regionLoadedDefer.resolve();
+		            // });
+
+// 
+					var def = RegionUtil.loadRegion(curRegion.find(".common-tree"),"common/shared/tree/simple-tree.rs?showDots=false","xx_treeRegionId");
+		            def.done(function(treeRegion){
+						// curRegion.treeRegion = treeRegion;
+		                // treeRegion.treeData = listData;
+						debugger
+
+						// treeRegion.nodeClick = REGION.nodeClick;//绑定节点点击事件
+						treeRegion.renderMenu(listData);
+						debugger
+
+
+		                regionLoadedDefer.resolve();
+		            });
+
+
+
+
+				}
+			})
+			return regionLoadedDefer.promise();
+		},
+		addLevelOne:function(event){
+			var curRegion = RegionUtil.getRegionByEvent(event);
+			var parentRegion = RegionUtil.getOuterRegion(curRegion);
+			parentRegion.addLevelOne(curRegion);
+		},
+		nodeClick:function(nodeData){
+			console.log(nodeData);
+		}
+};
+
+RegionUtil.ready(function(){
+	// var staticRegion = RegionUtil.newStaticRegion("#REGION");
+
+	var res = {
+		message:{
+			dft:{
+				spId:"spId",
+			}
+		},
+		dataList:{
+			dft:{
+			}
+		}
+	};
+
+	var staticRegion = RegionUtil.newFormRegion("#REGION",res);
+	staticRegion.afterRenderData = REGION.afterRenderData;
+	staticRegion.renderRegion();
+	
+})
+</script>

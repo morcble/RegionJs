@@ -1,0 +1,50 @@
+[	
+		{
+			"id": "140",
+			"icon": "fa-users",
+			"label": "用户",
+			"value": "user",
+			"parentNodeId": "0",
+			"expand": false
+		},
+		{
+			"id": "150",
+			"icon": "fa-address-book",
+			"label": "角色管理",
+			"value": "role",
+			"parentNodeId": "0",
+			"expand": false
+		},
+		{
+			"id": "160",
+			"icon": "fa-book",
+			"label": "字典配置",
+			"value": "dict",
+			"parentNodeId": "0",
+			"expand": false
+		},
+		{
+			"id": "190",
+			"icon": "fa-gear",
+			"label": "消息管理",
+			"value": "msg",
+			"parentNodeId": "0",
+			"expand": false
+		},
+		{
+			"id": "190_10",
+			"icon": "fa-gear",
+			"label": "消息配置",
+			"value": "sys/admin/rcs/msg/msgconfig/msgconfiglist.rs",
+			"parentNodeId": "190",
+			"expand": false
+		},
+		{
+			"id": "190_20",
+			"icon": "fa-gear",
+			"label": "消息历史记录",
+			"value": "sys/admin/rcs/msg/msg/msglist.rs",
+			"parentNodeId": "190",
+			"expand": false
+		}
+]

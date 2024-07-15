@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="cache-control" content="no-cache">
+		<meta http-equiv="expires" content="0">
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+		<script type="text/javascript" src="function-plot.js"></script>
+	</head>
+<body>
+<view class="content">
+		<div id="root"></div>
+	</view>
+</body>
+
+<script>
+let contentsBounds = document.body.getBoundingClientRect();
+let width = 800;
+let height = 500;
+let ratio = contentsBounds.width / width;
+width *= ratio;
+height *= ratio;
+// 画图核心如下
+functionPlot({
+	target: "#root",  // 目标画布节点
+	// 定义画布长宽
+	width,
+	height,
+	// 设置 x,y 轴默认区间
+	xAxis: {domain: [-8, 8], label: 'x 轴'},
+	yAxis: {domain: [-8, 8], label: 'y 轴'},
+	// 显示方格
+	grid: true,
+	// 需要绘制的函数，是数组，所以可以绘制多条函数
+	data: [{
+		fn: "x^2", // 也可以 pow(x, 2)
+	  // 画出某点的切线 (没啥用，建议删除)
+		derivative: {
+			fn: "2 * x",
+			updateOnMouseMove: true
+		}
+	}]
+});
+</script>
+</html>
+

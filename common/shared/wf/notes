@@ -1,0 +1,6 @@
+流程向导组件
+
+嵌入的组件需要实现saveStep接口
+
+wizard.rs 的第一个tab是主申请
+wizard-new.rs 主申请是隐藏的

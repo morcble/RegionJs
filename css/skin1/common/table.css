@@ -1,0 +1,380 @@
+ol,
+ul {
+  margin-bottom: 0;
+  list-style: none;
+}
+.color {
+  color: #1663f1;
+}
+.color-f3 {
+  color: #f32121;
+}
+.color-ff {
+  color: #fff;
+}
+.color-33 {
+  color: #263a4f;
+}
+.background-ff {
+  background: #fff;
+}
+.box-shadow {
+  box-shadow: -5px -5px 20px #ebecf0, 5px 5px 20px #ebecf0;
+}
+.split {
+  overflow: inherit;
+}
+.maxwidth40 {
+  max-width: 2.5rem;
+}
+.maxwidth60 {
+  max-width: 3.75rem;
+}
+.background-ff {
+  background: #fff;
+}
+.border-bottom {
+  border-bottom: 1px solid #eee;
+}
+.box-shadow-input {
+  box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.08), 0 3px 6px 0 rgba(0, 0, 0, 0.06), 0 5px 12px 4px rgba(0, 0, 0, 0.04);
+}
+.box-shadow-date {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.border {
+  border: 1px solid #dcdfe6;
+}
+.border-radius {
+  border-radius: 4px;
+}
+.border-right {
+  border-right: 1px solid #eee;
+}
+.tableScrollRow {
+  overflow: auto;
+  padding: 0 1.875rem;
+  position: relative;
+}
+.tableScrollControl::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.tableScrollControl::-webkit-scrollbar-button {
+  display: none;
+}
+.tableScrollControl::-webkit-scrollbar-thumb {
+  cursor: pointer;
+}
+.tableScrollControl::-webkit-scrollbar-corner {
+  display: none;
+}
+.tableScrollControl::-webkit-resizer {
+  display: none;
+}
+.tableScrollRow {
+  overflow: auto;
+  padding: 0 !important;
+  border-right: 2px solid #f2f2f2;
+  border-left: 2px solid #f2f2f2;
+}
+.table-body {
+  padding: 0.75rem;
+  clear: both;
+  /*
+  *
+  *滚动条阴影
+  */
+}
+.table-body .row {
+  margin: 0;
+  border-bottom: 1px solid #e9e9e9;
+  text-align: left;
+  overflow: hidden;
+}
+.table-body .row .table-left {
+  text-align: left;
+  padding-left: 0.625rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+.table-body .row:hover {
+  background: #ebf7ff;
+  transition: 0.2s ease-in-out;
+}
+.table-body .row.datas-columns {
+  overflow: auto;
+  background-color: #f5f7fa;
+  line-height: 3rem;
+  position: relative;
+  padding: 0.375rem 0 0.375rem 3.75rem;
+}
+.table-body .row.datas-columns [class*=col-xs-] {
+  padding-left: 0.9375rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.table-body .row.datas-columns [class*=col-xs-].text-center {
+  padding-left: 0 !important;
+}
+.table-body .row.datas-columns [class*=col-xs-] .switch-wrapper .switch-wrapper-btn {
+  margin-top: 0 !important;
+}
+.table-body .row.datas-columns .maxwidth60 {
+  position: absolute;
+  left: 0;
+  padding-left: 0;
+  text-align: center;
+  width: 3.75rem;
+}
+.table-body .hand [class*=col-xs-] {
+  line-height: 2rem;
+  min-height: 2rem;
+  height: 2rem;
+  font-size: 1.125rem;
+}
+.table-body .datas {
+  max-height: calc(100vh - 0.0625rem * 250);
+  overflow-y: auto;
+}
+.table-body .datas [class*=col-xs-] {
+  line-height: 3rem;
+  font-size: 1.125rem;
+}
+.table-body .datas [class*=col-xs-].text-center {
+  padding-left: 0 !important;
+}
+.table-body .datas [class*=col-xs-] .btn {
+  min-width: 3rem;
+  line-height: 1.25rem;
+  min-height: 2rem;
+}
+.table-body .datas [class*=col-xs-] button {
+  margin: 0 0.1875rem;
+}
+.table-body .datas [class*=col-xs-] .switch-wrapper {
+  padding-top: 0.3125rem;
+}
+.table-body .datas .row {
+  /*padding-left: 3.75rem;*/
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+.table-body .datas .row [class*=col-xs-] {
+  padding-left: 0.9375rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 3rem;
+}
+.table-body .datas .row .text-center {
+  padding-left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.table-body .datas .row .maxwidth60 {
+  position: absolute;
+  left: 0;
+  padding-left: 0;
+  text-align: center;
+  width: 3.75rem;
+  line-height: 3rem;
+}
+.table-body .datas .hand {
+  border-left: 0;
+}
+.table-body .datas .hand [class*=col-xs-] {
+  border-right: 0;
+  line-height: 2rem;
+  height: 2rem;
+  padding: 0;
+}
+.table-body .datas .hand span {
+  padding: 0;
+  border: 0;
+}
+.table-body .shadow-right {
+  box-shadow: inset -30px 0 20px -20px #ebecf0, inset 30px 0 30px -20px #ebecf0;
+}
+.table-body .shadow-left {
+  box-shadow: inset 30px 0 30px -20px #ebecf0, inset -30px 0 20px -20px #ebecf0;
+}
+.table-body .box-right {
+  box-shadow: inset -10px 0 10px -10px #ebecf0, inset 10px 0 10px -10px #ebecf0;
+}
+.table-body .box-left {
+  box-shadow: inset 10px 0 10px -10px #ebecf0, inset -10px 0 10px -10px #ebecf0;
+}
+.table-body .container {
+  margin: 0;
+  min-width: 93.75rem;
+  width: auto;
+  padding: 0;
+}
+/* start of style: paginationControl */
+.paginationControl {
+  width: 100%;
+  padding: 1.125rem 0.625rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 1rem;
+  margin-top: 3.125rem;
+}
+.paginationControl .info {
+  margin-right: 0.625rem;
+  margin-left: 0.3125rem;
+}
+.paginationControl .totalPageDis,
+.paginationControl .totalAmountDis {
+  color: #1663f1;
+  font-weight: bold;
+  margin: 0 0.3125rem;
+}
+.paginationControl > .control .pageIndexBtn,
+.paginationControl > .control .pageExtendBtn,
+.paginationControl > .control .prePageBtn,
+.paginationControl > .control .nextPageBtn {
+  min-width: 2.25rem;
+  border: 1px solid #ccc;
+  height: 2.5rem;
+  line-height: 1.25rem;
+}
+.paginationControl > .control .pageIndexBtn.pageIndexBtnCurrent {
+  background-color: #1663f1;
+  color: white;
+  border: 0;
+  line-height: 1.25rem;
+}
+.paginationControl > .control > .pagination-option,
+.paginationControl > .control > .pagination-go {
+  margin-left: 0.5rem;
+  display: inline-block;
+}
+.paginationControl > .control > .pagination-go > input.goPageId {
+  width: 3.125rem;
+  height: 2.5rem;
+}
+.paginationControl > .control > .pagination-go > .redirectPageBtn {
+  padding: 0;
+  height: 2.5rem;
+  margin-top: -0.3125rem;
+}
+.paginationControl > .control > .pagination-option > select {
+  background-color: white;
+  margin-right: 0.3125rem;
+  outline: none;
+  padding: 0;
+  height: 2.5rem;
+}
+.paginationControl > .control > .pagination-go > input {
+  display: inline-block;
+  margin-right: 0.3125rem;
+}
+.paginationControl .pageSizeSelect {
+  border: 1px solid #ccc;
+}
+.deleteControl {
+  float: left;
+  margin-left: 0.75rem;
+}
+/* end of style: paginationControl */
+.table-body[border] .datas-columns {
+  border: 1px solid #e9e9e9;
+  border-right: 0;
+  padding: 0 0 0 3.75rem;
+  position: relative;
+}
+.table-body[border] .datas-columns [class*=col-xs-] {
+  border-right: 1px solid #e9e9e9;
+  border-bottom: 0;
+  padding-left: 0.9375rem;
+}
+.table-body[border] .datas-columns .maxwidth60 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-left: 0;
+  width: 3.75rem;
+  line-height: 3rem;
+  text-align: center;
+  border-right: 1px solid #e9e9e9;
+}
+.table-body[border] .datas .row {
+  padding: 0 0 0 3.75rem;
+  position: relative;
+  border-left: 1px solid #e9e9e9;
+}
+.table-body[border] .datas .row [class*=col-xs-] {
+  border-right: 1px solid #e9e9e9;
+  border-top: 0;
+  padding-left: 0.9375rem;
+}
+.table-body[border] .datas .row .maxwidth60 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3.75rem;
+  border-right: 1px solid #e9e9e9;
+  text-align: center;
+  height: 100%;
+  line-height: 100%;
+  padding: 0.375rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.table-body[border] .datas .hand {
+  border-left: 0;
+}
+.table-body[border] .datas .hand [class*=col-xs-] {
+  border-right: 0;
+  line-height: 2rem;
+  height: 2rem;
+  padding: 0;
+}
+.table-body[border] .datas .hand span {
+  padding: 0;
+  border: 0;
+}
+.table-body[stripe] .datas .row:nth-child(2n) {
+  background: #f8f8f9;
+}
+.table-body[stripe] .datas .row:hover {
+  background: #ebf7ff;
+  transition: 0.2s ease-in-out;
+}
+.table-body.text-center .datas-columns [class*=col-xs-] {
+  text-align: center;
+  padding-left: 0;
+}
+.table-body.text-center .datas-columns .maxwidth60 {
+  padding-left: 0;
+}
+.table-body.text-center .datas .row [class*=col-xs-] {
+  text-align: center;
+  padding-left: 0;
+}
+.table-body.text-center .datas .row .maxwidth60 {
+  padding-left: 0;
+}
+.table-body[no-padding] .row.datas-columns {
+  padding-left: 0;
+}
+.table-body[no-padding] .datas .row {
+  padding-left: 0;
+}
+.float-dialog-holder .table-body {
+  padding: 0;
+}
+.table-body .datas-columns[center] {
+  text-align: center;
+}
+.table-body .datas-columns[center] [class*=col-xs-] {
+  padding-left: 0;
+}
+/*# sourceMappingURL=table.css.map */

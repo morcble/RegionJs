@@ -1,0 +1,26 @@
+
+<!-- saved from url=(0048)http://test.video:30000/video/41/video.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><script src="./video_files/hls_hc.js"></script>
+</head><body><video id="video" style="width:100%;" muted="" controls="" autoplay="" preload="auto" src=""></video>
+<script>
+    var video=document.getElementById('video');
+    if(Hls.isSupported()){
+        var video = document.getElementById('video');
+        var hls = new Hls();
+        hls.loadSource('http://kjyxt.innovationpark.regionsoft.cn:8888/video/24/test.m3u8');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            video.play();
+        });
+     }
+     else if(video.canPlayType('application/vnd.apple.mpegurl')){
+        source=document.createElement('source');
+        source.setAttribute("type","application/vnd.apple.mpegurl");
+        source.setAttribute("src","http://kjyxt.innovationpark.regionsoft.cn:8888/video/24/test.m3u8");
+        video.appendChild(source);
+     }
+     else{
+        alert("not support!");
+     }
+</script>
+</body></html>

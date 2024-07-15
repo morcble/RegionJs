@@ -1,0 +1,58 @@
+body,
+html {
+  font-size: 14px;
+}
+ol,
+ul {
+  margin-bottom: 0;
+  list-style: none;
+}
+.color {
+  color: #2196f3;
+}
+.color-f3 {
+  color: #f32121;
+}
+.color-ff {
+  color: #fff;
+}
+.color-33 {
+  color: #333;
+}
+.background-ff {
+  background: #fff;
+}
+.box-shadow {
+  box-shadow: -5px -5px 20px #ebecf0, 5px 5px 20px #ebecf0;
+}
+.split {
+  overflow: inherit;
+}
+.maxwidth40 {
+  max-width: 0.5rem;
+}
+.maxwidth60 {
+  max-width: 1rem;
+}
+.background-ff {
+  background: #fff;
+}
+.border-bottom {
+  border-bottom: 1px solid #eee;
+}
+.box-shadow-input {
+  box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.08), 0 3px 6px 0 rgba(0, 0, 0, 0.06), 0 5px 12px 4px rgba(0, 0, 0, 0.04);
+}
+.box-shadow-date {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.border {
+  border: 1px solid #dcdfe6;
+}
+.border-radius {
+  border-radius: 4px;
+}
+.border-right {
+  border-right: 1px solid #eee;
+}
+/*# sourceMappingURL=theme.css.map */

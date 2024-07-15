@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<base href="/">
+<title>RCS_Auth System</title>
+<script type="text/javascript" id="configjs" src="core/config.js?v=1.0.0.18"></script>
+<script type="text/javascript" src="js/rem.js"></script>
+<link rel="stylesheet" type="text/css" href="css/skin1/index.css"></link>
+<link rel="stylesheet" type="text/css" href="css/skin1/cssSkin.css"/>
+
+
+</head>
+<body>
+	<div id="previewRegion" style="height:100%;background: white"></div>
+	<script type="text/javascript">
+		RegionUtil.ready(function() {
+			var q = location.search.substr(1);
+			//q = decodeURIComponent(q);
+			CoverPlugin.loadingStart();
+			var tmpMap = RegionUtil.getUrlParaMap();
+			var regionId = tmpMap.get("regionId");
+			if(regionId==null)regionId=RegionUtil.getUUID();
+		
+			if(window.SystemInitPromise!=null){
+				window.SystemInitPromise.done(function(){
+					var def = RegionUtil.loadRegion($("#previewRegion"), q, regionId);
+					def.done(function(region) {
+						CoverPlugin.loadingComplete();
+					})
+				})
+			}
+			else{
+				var def = RegionUtil.loadRegion($("#previewRegion"), q, regionId);
+				def.done(function(region) {
+					CoverPlugin.loadingComplete();
+				})
+			}
+			
+			
+		})
+	</script>
+</body>
+</html>

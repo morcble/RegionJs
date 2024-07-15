@@ -1,0 +1,49 @@
+<html>
+<head>
+	<title>預覽</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<base href="/">
+	<title></title>
+	<link rel="stylesheet" href="app/css/main.css">
+	<script src="app/js/base.js"></script>
+	<script type="text/javascript" id="configjs" src="core/app.config.js?v=1.0.0.18"></script>
+	<link type="text/css" rel="stylesheet" href="libs/ckeditor/contents.css?t=J8Q8">
+	<link type="text/css" rel="stylesheet" href="libs/ckeditor/plugins/copyformatting/styles/copyformatting.css">
+	<link type="text/css" rel="stylesheet" href="libs/ckeditor/plugins/tableselection/styles/tableselection.css">
+	<script src="libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS_HTML&amp;t=J8Q8&amp;t=J8Q8"></script>
+
+</head>
+<body class="cke_editable cke_editable_themed cke_contents_ltr cke_show_borders">
+	<div class="holder"></div>
+</body>
+
+<script type="text/javascript" src="/shared/libs/jquery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript">
+	if(RegionUtil.isPc()){
+		RegionUtil.toast("请使用手机浏览");
+	}
+	else{
+		var paraMap = RegionUtil.getUrlParaMap();
+		var url=paraMap.get("url");
+		RegionUtil.call(url,"POST",null,function(obj,dataPara){
+			$(".holder").html(obj.data.information);
+		})
+	}
+
+/*	$(".video").each(function(){
+		var style = this.getAttribute("style");
+
+		var newHtml = '<video src="'+this.getAttribute('data')+'" controls="controls"></video>';
+		var videoObj = $(newHtml);
+		if(style!=null)videoObj.attr("style",style);
+
+		$(this).replaceWith(videoObj);
+	})*/
+</script>
+</html>

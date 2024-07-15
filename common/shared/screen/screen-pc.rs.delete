@@ -1,0 +1,410 @@
+<!-- 屏幕组件  应用最基本的构成是由多个屏幕组件组合而成-->
+<style type="text/css">
+#REGION .screen{
+    position: relative;
+}
+
+</style>
+
+<div id="REGION" class="hidden">
+	<div class="REGION-screen-content">
+	</div>
+</div>	
+
+
+<script type="text/javascript">
+
+
+var REGION = {
+		goBack:function(event){
+			var curRegion = RegionUtil.getRegionByEvent(event);
+			var curScreenRegion = curRegion.getCurrentScreenRegion();
+			console.log(curRegion.paraMap.keySet());
+			console.log(curScreenRegion.paraMap.keySet());			
+			
+			var jump = curRegion.jumpStep;
+			//jump = -2;
+			if(jump == null){
+				jump = -1;
+			}
+			else{
+				//临时回退参数置为空
+				curRegion.jumpStep = null;
+			}
+			
+			history.go(jump);
+		},
+		clearBackState:function(){//清除history里所有的state
+			if(window.screenRegion.clearDef!=null)return window.screenRegion.clearDef.promise();
+		
+			window.screenRegion.clearDef = new jQuery.Deferred();
+			if(window.screenRegion.screenDepth>0)
+				window.history.go(-1);
+			else window.screenRegion.clearDef.resolve();
+			
+			return window.screenRegion.clearDef.promise();
+		},
+		renderContent:function(){
+			var curRegion = this;
+			if(!curRegion.inited){
+				curRegion.inited = true;
+				curRegion.refreshRegion = REGION.refreshRegion;
+				curRegion.loadScreen = REGION.loadScreen;
+				curRegion.unloadScreen = REGION.unloadScreen;
+				curRegion.pushState = REGION.pushState;
+				curRegion.historyGoBack = REGION.historyGoBack;
+				curRegion.getScreenRegionByName = REGION.getScreenRegionByName;
+				curRegion.clearBackState = REGION.clearBackState;
+				curRegion.getCurrentScreenRegion = REGION.getCurrentScreenRegion;
+				curRegion.firstScreenObject=null;//首个屏幕
+				curRegion.redirectScreen = REGION.redirectScreen;
+				curRegion.redirectScreenData = null;
+				curRegion.jumpStep = null;
+				
+				
+				curRegion.screenHisParaMapObject = {};
+				
+				curRegion.screenDepth = 0 ;
+				window.screenRegion = curRegion;
+				window.screenRegion.lastReturnTime = null;//双击后退 退出功能
+				window.onpopstate = function (event) {
+					/* if(curRegion!=null&& typeof curRegion.beforeGoback === "function"){
+						curRegion.beforeGoback();
+					} */
+					
+					//跳转多个屏begin
+					var jump = curRegion.jumpStep;
+					if(jump != null){
+						curRegion.jumpStep = null;
+						jump = curRegion.jumpStep+1;
+						if(jump<0){
+							history.go(jump);
+							return;
+						}
+					}
+					//跳转多个屏end
+					
+					var screenObject= event.state;	
+					var screenName= null;
+
+					
+					if(screenObject==null){
+						screenObject = curRegion.firstScreenObject;
+						history.go(-1);//for两个html跳转的bug
+					}
+					
+					screenName = screenObject.screenName;
+					curRegion.screenDepth = screenObject.depth;
+					
+					if(window.screenRegion.blockBack==true){
+						curRegion.pushState(screenName,screenObject);
+						curRegion.screenDepth--;
+						return;
+					}
+					
+					
+					//卸载当前非缓存屏 begin 
+					var screenRegion = curRegion;
+					if(screenRegion.currentScreen!=null && curRegion.screenDepth>0){
+						if(screenName==screenRegion.currentScreen){
+							//当目标屏幕和当前是同一个屏幕则不处理
+						}
+						else{
+							var previousScreenInfo = screenRegion.screensInfo[screenRegion.screenMap.get(screenName)];
+				
+							var currentScreenInfo = screenRegion.screensInfo[screenRegion.screenMap.get(screenRegion.currentScreen)];
+							
+							//不使用缓存,且screen name不一样,且region不一样才卸载缓存屏
+							var needUnload = false;
+							if(currentScreenInfo.useCache==false){
+								needUnload = true;
+							}
+							else{
+								if(previousScreenInfo.screenRegion==currentScreenInfo.screenRegion)needUnload = true;
+							}
+							if(needUnload)screenRegion.unloadScreen(screenRegion.currentScreen);
+							
+							/* if(currentScreenInfo.useCache==false ||previousScreenInfo.screenRegion!=currentScreenInfo.screenRegion){
+								screenRegion.unloadScreen(screenRegion.currentScreen);
+							} */
+						}
+						
+					} 
+					//卸载当前非缓存屏 end 
+					
+					
+					console.log("screen depth"+curRegion.screenDepth)
+					if(curRegion.screenDepth<1)curRegion.screenDepth=1;
+					
+					console.log("back to screen="+screenName)
+					if(window.screenRegion.clearDef!=null){
+						if(screenName==null){
+							window.screenRegion.clearDef.resolve();
+							window.screenRegion.clearDef = null;
+						}
+						else {
+							window.history.go(-1);
+						}
+						return;
+					}
+					
+					/* if(screenName==null){
+						history.go(-1);//for两个html跳转的bug
+						return
+					} */
+					
+					if(curRegion.screenDepth>1){
+						curRegion.find(".screen-back-btn").removeClass("hidden");
+					}
+					else{
+						curRegion.find(".screen-back-btn").addClass("hidden");
+					}
+					
+// 					if(window.screenRegion.blockBack==true){
+// 						REGION.pushState("exercise");
+						
+// 						//双击后退 退出功能 开始
+// 						if(window.screenRegion.lastReturnTime==null){
+// 							window.screenRegion.lastReturnTime = new Date().getTime();
+// 							RegionUtil.toast("再点一次终止学习",{duration:1500});
+// 						}
+// 						else{
+// 							var now = new Date().getTime();
+// 							if((now - window.screenRegion.lastReturnTime)<1500){
+// 								//退出
+// 								window.screenRegion.blockBack=false;
+// 								window.screenRegion.historyGoBack(-2);
+								
+// 							}
+// 							else{
+// 								window.screenRegion.lastReturnTime = now;
+// 								RegionUtil.toast("再点一次终止学习",{duration:1500});
+// 							}
+							
+// 						}
+// 						//双击后退 退出功能 结束
+// 						return;
+// 					}
+					
+					if(window.screenRegion.redirectScreenData!=null){
+						window.screenRegion.loadScreen(window.screenRegion.redirectScreenData.screenName,window.screenRegion.redirectScreenData.paraMap);
+						window.screenRegion.redirectScreenData = null;
+					}
+					else{
+						if(window.screenRegion.disableAutoLoadScreen!=true){
+							console.log(screenName+"#"+curRegion.screenDepth)
+							var screenInfo = window.screenRegion.screensInfo[window.screenRegion.screenMap.get(screenName)];
+							if(screenInfo!=null){
+								if(screenInfo.useCache==false){
+									//没有使用缓存,则需获取历史组件参数
+									screenInfo.paraMap = curRegion.screenHisParaMapObject[screenName+"#"+curRegion.screenDepth];
+								}
+								window.screenRegion.loadScreen(screenName,screenInfo.paraMap,true);
+								
+							}	
+						}
+					}
+					
+				}
+			}
+		},
+		getScreenRegionByName:function(screenName){
+			return this.loadedRegions.get(screenName);
+		},
+		refreshRegion:function(){
+			var curRegion = this;
+			
+			curRegion.inited = true;
+			curRegion.loadedScreens = {};
+			curRegion.loadedRegions = new HashMap();
+
+			var appendHtml="";
+			var tmpInfo = null;
+			curRegion.screenMap = new HashMap();//screen名-序号
+			for(var i = 0 ; i <curRegion.screensInfo.length ; i++){
+				tmpInfo = curRegion.screensInfo[i];
+				
+				appendHtml+='<div class="screen hidden '+tmpInfo.name+'"></div>';
+				
+				curRegion.screenMap.put(tmpInfo.name,i);
+			}
+			
+			RegionUtil.setInnerHtml(curRegion,curRegion.find(".REGION-screen-content")[0],appendHtml);//内容区域
+			setTimeout(function(){
+				if(location.hash!=null&&location.hash!=""){
+					var defaultScreenIndex = curRegion.screenMap.get(location.hash.substring(1));
+					if(defaultScreenIndex!=null){
+						var map=new HashMap();
+						map.put("screenName",location.hash.substring(1));
+				        RegionUtil.gotoScreen(curRegion.screensInfo[defaultScreenIndex].name,map);
+					}
+				}
+				else{
+					curRegion.loadScreen(curRegion.screensInfo[0].name);
+				}
+			});
+		},
+		pushState:function(screenName,paraMap){
+			console.log("goto screen="+screenName)
+		
+			var href = window.location.href;
+			var index = href.indexOf("#");
+			if(index!=-1)
+				href = href.substring(0,index);
+			
+			this.screenDepth++;
+			
+			var screenObject = {};
+			screenObject.screenName = screenName;
+			screenObject.depth = this.screenDepth;
+			
+			if(this.firstScreenObject==null){
+				this.firstScreenObject = screenObject;
+			}
+			history.pushState(screenObject, "", href+"#"+screenName);
+			this.screenHisParaMapObject[screenName+"#"+this.screenDepth] = paraMap;
+			console.log("screen depth"+this.screenDepth)
+			if(this.screenDepth>1){
+				this.find(".screen-back-btn").removeClass("hidden");
+			}
+			else{
+				this.find(".screen-back-btn").addClass("hidden");
+			}
+		},
+		historyGoBack:function(backCount){//backCount回退几步,backCount为负数
+			if(backCount>0)backCount=-backCount;
+			window.screenRegion.disableAutoLoadScreen = true;
+			history.go(backCount+1);
+			window.screenRegion.disableAutoLoadScreen = false;
+			history.go(-1);
+			
+			this.screenDepth+=backCount;
+			if(this.screenDepth<0)this.screenDepth=0;
+			if(this.screenDepth>1){
+				this.find(".screen-back-btn").removeClass("hidden");
+			}
+			else{
+				this.find(".screen-back-btn").addClass("hidden");
+			}
+		},
+		unloadScreen:function(screenName){
+			var tmpRegion = this.loadedRegions.remove(screenName);
+			if(tmpRegion!=null){//TODO tmpRegion.release();
+				tmpRegion.release();
+// 				delete window.regions["region_"+tmpRegion.regionId];
+// 				$(tmpRegion.getRegionDivElem()).parent().remove();
+				this.loadedScreens[screenName] = null;
+			}
+		},
+		getCurrentScreenRegion:function(){
+			return this.loadedRegions.get(screenRegion.currentScreen);
+		},
+		loadScreen:function(screenName,paraMap,isBack){//加载screen并返回对应的region ,isBack = true 表示页面回退时不调用pushState
+			if(this.currentScreen == screenName)return;//当前屏等于要加载的屏幕，则不加载 TODO 对比参数
+		
+			//把参数传到screen组件开始
+			if(paraMap==null){
+				paraMap = this.paraMap;
+			}
+			else{
+				var keySet = this.paraMap.keySet();
+				for(var i = 0 ; i <keySet.length;i++){
+					paraMap.put(keySet[i],this.paraMap.get(keySet[i]))
+				}
+			}
+			//把参数传到screen组件结束
+
+			var promiseKey = this.regionId+"loadScreen";
+			var loadScreenPromise = RegionUtil.createNewDef(promiseKey);
+			var screenRegion = this;
+			//if(screenRegion.currentScreen!=screenName){
+				var screenHolder = screenRegion.find(".REGION-screen-content");
+				var childDivs = screenHolder.children();
+				
+				var tmpDivObj = null;
+				for(var i = 0 ; i<childDivs.length ;i++){
+					tmpDivObj = $(childDivs[i]);
+					if(tmpDivObj.hasClass(screenName)){//如果是要跳转的screen
+							var paraJson = null;
+							if(paraMap!=null)
+								paraJson = JSON.stringify(paraMap.values());
+							var screenInfo = screenRegion.screensInfo[screenRegion.screenMap.get(screenName)];
+							
+							if(screenRegion.currentScreen!=null){
+								var currentScreenHolder = screenRegion.find(".REGION-screen-content").children("."+screenRegion.currentScreen);
+								currentScreenHolder.addClass("hidden");
+							}
+							
+							if(screenInfo.useCache==false||this.loadedScreens[screenName]==null||screenInfo.paraJson!=paraJson){
+								if(screenRegion.currentScreen!=null){
+									var currentScreenInfo = screenRegion.screensInfo[screenRegion.screenMap.get(screenRegion.currentScreen)];
+									if(currentScreenInfo.useCache==false){
+										screenRegion.unloadScreen(screenRegion.currentScreen);
+									}
+								}
+								
+								
+								screenInfo.paraJson = paraJson;
+								screenInfo.paraMap = paraMap;
+								//RegionUtil.loadingStart();
+								tmpDivObj.attr("sn",screenName);
+								var def = RegionUtil.loadRegion(tmpDivObj,RegionUtil.appendParaMapToUrl(screenInfo.screenRegion,screenInfo.paraMap),this.regionId+"_"+screenName);
+								def.done(function(loadedRegion){
+									screenRegion.loadedRegions.put(screenName,loadedRegion);
+									screenRegion.loadedScreens[screenName] = screenName;
+									screenRegion.previousScreen = screenRegion.currentScreen;
+									screenRegion.currentScreen = screenName;
+									if(!isBack)screenRegion.pushState(screenName,paraMap);
+									//RegionUtil.loadingComplete();
+									RegionUtil.resolveDef(promiseKey,loadedRegion);
+								})
+							}
+							else{
+								screenRegion.previousScreen = screenRegion.currentScreen;
+								screenRegion.currentScreen = screenName;
+								
+								var cachedRegion = screenRegion.getScreenRegionByName(screenName);
+								RegionUtil.resolveDef(promiseKey,cachedRegion);
+								if(!isBack)this.pushState(screenName,paraMap);
+							}
+
+							loadScreenPromise.done(function(switchedRegion){
+								tmpDivObj.css("z-index",100);
+								tmpDivObj.removeClass("hidden");
+								
+								if(typeof switchedRegion.onResumeScreen === "function"){
+									switchedRegion.onResumeScreen();
+								}
+							});
+							break;
+					}
+				}	
+			//}
+			/* else{
+				RegionUtil.resolveDef(promiseKey,screenRegion.getScreenRegionByName(screenName));
+			} */
+			
+			return loadScreenPromise;
+		},
+		redirectScreen:function(screenName,paraMap,backStep){
+			if(backStep==null)backStep=-1;
+			if(backStep>=0){
+				alert("backStep 应该小于0");
+				return;
+			}
+			var screenRegion = this;
+			screenRegion.redirectScreenData = {};
+			screenRegion.redirectScreenData.screenName = screenName;
+			screenRegion.redirectScreenData.paraMap = paraMap;
+			history.go(backStep);
+		}
+};
+
+
+RegionUtil.ready(function(){
+	var staticRegion = RegionUtil.newStaticRegion("#REGION");
+	staticRegion.afterRenderData = REGION.renderContent;
+	staticRegion.renderRegion();
+})
+</script>
+

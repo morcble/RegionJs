@@ -1,0 +1,477 @@
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grapheditor</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="styles/grapheditor.css">
+    <style>
+    	button.submit {
+			width: 60px;
+			height: 30px;
+			background: #1862EB;
+			z-index: 999;
+			position: absolute;
+			right: 100px;
+			top: 5px;
+			border-radius: 5px;
+			color: white;
+			text-align: center;
+			vertical-align: middle;
+			border: none;
+			cursor: pointer;
+    	}
+    	hr {
+    		margin: 0 !important;
+    	}
+		::-webkit-scrollbar {
+		  width: 0.5rem !important;
+		  height: 0.5rem !important;
+		}
+		::-webkit-scrollbar-thumb {
+		     border-radius: 0 !important;
+		     background: #c1c1c1 !important;
+		}
+		button.saveBtn  {
+            position: absolute !important;
+            right: 5rem;
+            height: 2.2rem;
+            font-size: 1rem;
+            top: 0.3rem;
+            text-align: center;
+            line-height: 1rem;
+            z-index: 2;
+            width: 6rem;
+		}
+    </style>
+	<script type="text/javascript">
+		// Parses URL parameters. Supported parameters are:
+		// - lang=xy: Specifies the language of the user interface.
+		// - touch=1: Enables a touch-style user interface.
+		// - storage=local: Enables HTML5 local storage.
+		// - chrome=0: Chromeless mode.
+		var urlParams = (function(url)
+		{
+			var result = new Object();
+			var idx = url.lastIndexOf('?');
+
+			if (idx > 0)
+			{
+				var params = url.substring(idx + 1).split('&');
+
+				for (var i = 0; i < params.length; i++)
+				{
+					idx = params[i].indexOf('=');
+
+					if (idx > 0)
+					{
+						result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
+					}
+				}
+			}
+
+			return result;
+		})(window.location.href);
+
+		// Default resources are included in grapheditor resources
+		mxLoadResources = false;
+	</script>
+	<!-- <script src="/libs/jquery/jquery-1.12.4.min.js"></script>
+	<script src="/libs/regionjs/3.0.4/regionjs-3.0.4.full.release.js"></script> -->
+	<script type="text/javascript" id="configjs" src="/core/config.js?v=1.0.0.18"></script>
+	<script type="text/javascript" src="js/Init.js"></script>
+	<script type="text/javascript" src="deflate/pako.min.js"></script>
+	<script type="text/javascript" src="deflate/base64.js"></script>
+	<script type="text/javascript" src="jscolor/jscolor.js"></script>
+	<script type="text/javascript" src="sanitizer/sanitizer.min.js"></script>
+	<script type="text/javascript" src="../src/js/mxClient.js"></script>
+	<script type="text/javascript" src="js/EditorUi.js"></script>
+	<script type="text/javascript" src="js/Editor.js"></script>
+	<script type="text/javascript" src="js/Sidebar.js"></script>
+	<script type="text/javascript" src="js/Graph.js"></script>
+	<script type="text/javascript" src="js/Format.js"></script>
+	<script type="text/javascript" src="js/Shapes.js"></script>
+	<script type="text/javascript" src="js/Actions.js"></script>
+	<script type="text/javascript" src="js/Menus.js"></script>
+	<script type="text/javascript" src="js/Toolbar.js"></script>
+	<script type="text/javascript" src="js/Dialogs.js"></script>
+</head>
+<body class="geEditor">
+	<button class="saveBtn " data-type="primary" normal >保存流程</button>
+	<script type="text/javascript">
+		// Extends EditorUi to update I/O action states based on availability of backend
+
+		RegionUtil.ready(function() {
+			var wrapRegionId = urlParams.regionId;
+			var wfEditorRegion = window.parent.getRegionById(wrapRegionId); // 外层Region
+            wfEditorRegion.nodesData = {};
+
+			$('.saveBtn').click(function() {
+				wfEditorRegion.saveRegion();
+			});
+
+			var workFlowConfigId = urlParams.configId; // 流程配置ID
+
+			var editorUiInit = EditorUi.prototype.init;
+
+			EditorUi.prototype.init = function()
+			{
+				editorUiInit.apply(this, arguments);
+				this.actions.get('export').setEnabled(false);
+				var editorUi = this;
+                var graph = editorUi.editor.graph;
+				var view = graph.view;
+				var model = graph.getModel();
+
+                // 挂载相应组件
+                wfEditorRegion.model = model;
+                wfEditorRegion.view = view;
+                wfEditorRegion.graph = graph;
+
+                // 禁用节点双击，防止改变数据
+                // graph.dblClick = function(evt, cell) {
+                //     var model = graph.getModel();
+                //     if (model.isVertex(cell)) {
+                //         return false;
+                //     }
+                // }
+
+                // 获取图形XML
+				wfEditorRegion.getGraphXml = function() {
+					var encoder = new mxCodec();
+					var node = encoder.encode(model);
+					return mxUtils.getXml(node);
+				};
+
+                // 获取节点类型和标识(自定义的标识)
+                wfEditorRegion.getNodeInfo = function(cell) {
+                    var state = this.view.getState(cell);
+                    var nodeType = mxUtils.getValue(state.style, 'nodeType', null);
+                    if (!!nodeType) {
+                    	return {key: `${nodeType}_${cell.id}`, type: nodeType}
+                    }
+                    return null;
+                };
+
+                // 是否是连线标签
+                wfEditorRegion.isEdgeLabel = function(cell) {
+                    return cell.style.indexOf('edgeLabel') != -1;
+                };
+
+                // 是否是连线
+                wfEditorRegion.edgeFilter = function(cell) {
+                    return this.model.isEdge(cell);
+                };
+
+                // 是否是几何图形
+                wfEditorRegion.vertexFilter = function(cell) {
+                    return this.model.isVertex(cell);
+                };
+
+                // 根据类型获取节点
+                wfEditorRegion.getNodesByType = function(type, allNodes) {
+                    return allNodes.filter(node => {
+                        var state = this.view.getState(node);
+                        var nodeType = mxUtils.getValue(state.style, 'nodeType', null);
+                        return nodeType == type;
+                    });
+                };
+
+                // 获取数据节点（不包括结束节点和标签文字）
+                wfEditorRegion.getDataNodes = function(allNodes) {
+                    return allNodes.filter(node => {
+                        var nodeInfo = this.getNodeInfo(node);
+                        if (!!nodeInfo) {
+                            return nodeInfo.type != 'end';
+                        }
+                        return false;
+                    });
+                };
+
+                // 判断两个节点是否联通(有向)
+                wfEditorRegion.isConnected = function(source, target) {
+                    const visited = new Set();
+                    let found = false;
+                    let that = this;
+
+                    function dfs(cell) {
+                        if (cell.id === target.id) { // 如果当前节点是目标节点
+                          found = true;
+                          return;
+                        }
+                        visited.add(cell.id); // 标记当前节点为已访问
+                        const edgeCount = that.model.getEdgeCount(cell); // 获取当前节点的边数
+
+                        // 遍历所有的边
+                        for (let i = 0; i < edgeCount; i++) {
+                            const edge = that.model.getEdgeAt(cell, i); // 获取边
+                            const source = that.model.getTerminal(edge, true); // 获取边的源节点
+                            const target = that.model.getTerminal(edge, false); // 获取边的目标节点
+                            //const nextCell = source.id === cell.id ? target : source; // 确定下一个要访问的节点
+                            if (source == null || target == null) {
+                                return;
+                            }
+                            const nextCell = target;
+
+                            if (!visited.has(nextCell.id)) { // 如果下一个节点未被访问
+                                dfs(nextCell); // 递归访问
+                                if (found) return; // 如果已找到目标节点，则结束搜索
+                            }
+                        }
+                    }
+
+                    dfs(source);
+                    return found;
+                };
+
+
+				// 流程图校验，返回节点数据，动态生成节点连接信息
+				wfEditorRegion.checkGraph = function() {
+
+					// 获取所有cell节点
+					var allNodes = this.model.filterDescendants(mxUtils.bind(this, this.vertexFilter));
+
+
+                    var dataNodes = this.getDataNodes(allNodes);
+
+                    var countError = { success: false, msg: '节点数量有误' };
+                    var dataError = { success: false, msg: '节点数据缺失' };
+                    var connectionError = { success: false, msg: '流程图未闭环' };
+
+                    if (dataNodes.length < 2) {
+                        return countError;
+                    }
+
+                    // 开始节点
+                    var startNodes = this.getNodesByType('start', allNodes);
+                    // 结束节点
+                    var endNodes = this.getNodesByType('end', allNodes);
+
+                    if (startNodes.length != 1) {
+                        return countError;
+                    }
+
+                    if (endNodes.length != 1) {
+                        return countError;
+                    }
+
+                    var startNode = startNodes[0];
+                    var startKey = this.getNodeInfo(startNode)['key']; //开始节点Key
+                    var endNode = endNodes[0];
+
+                    // 测试节点连接合理性
+                    var connErrorFlag = false;
+                    for (var i = 0; i < allNodes.length; ++i) {
+                        var node = allNodes[i];
+                        var nodeInfo = this.getNodeInfo(node);
+                        if (!!nodeInfo) {
+                            var inCount = this.model.getIncomingEdges(node).length;
+                            var outCount = this.model.getOutgoingEdges(node).length;
+                            if (nodeInfo.type == 'start') {
+                                if (inCount != 0 || outCount != 1) {
+                                    connErrorFlag = true;
+                                    break;
+                                }
+                            } else if (nodeInfo.type == 'task') {
+                                if (inCount == 0 || outCount == 0) {
+                                    connErrorFlag = true;
+                                    break;
+                                }
+                            } else if (nodeInfo.type == 'end') {
+                                if (inCount == 0 || outCount != 0) {
+                                    connErrorFlag = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (connErrorFlag) {
+                        return connectionError;
+                    }
+
+                    // 测试数据节点和结束节点之间的连通性
+                    for (var i = 0; i < dataNodes.length; ++i) {
+                        var dataNode = dataNodes[i];
+                        var connectCheck = mxUtils.bind(this, this.isConnected);
+                        if (!connectCheck(dataNode, endNode)) {
+                            return connectionError;
+                        }
+                    }
+
+
+                    // 同步nodesData和当前流程图数据，并清除已有连线信息
+                    //var taskKeys = [];   // 任务节点Key数组
+                    var nodeDataEmpty = false;
+                    var startNode = null;
+                    if (Object.keys(this.nodesData).length > 0) {
+                        var newNodesData = {};
+                        for (var i = 0; i < dataNodes.length; ++i) {
+                            var node = dataNodes[i];
+                            var nodeInfo = this.getNodeInfo(node);
+                            if (!!nodeInfo) {
+                                var cellLabel = node.value; // 节点标签
+                                var nodeKey = nodeInfo.key;
+                                var nodeType = nodeInfo.type;
+                                if (!!this.nodesData[nodeKey]) {
+                                    newNodesData[nodeKey] = this.nodesData[nodeKey];
+                                    if (nodeType == 'start') {
+                                        newNodesData[nodeKey]['defaultNextStep'] = null;
+                                        newNodesData[nodeKey]['wfDesc'] = cellLabel; // 以图形显示名称为准
+                                    } else if (nodeType == 'task') {
+                                        newNodesData[nodeKey]['availableSteps'] = null;
+                                        newNodesData[nodeKey]['name'] = cellLabel; // 以图标显示名称为准
+                                        // if (!!newNodesData[nodeKey]['id']) {
+                                        //     taskKeys.push(nodeKey);
+                                        // }
+                                    }
+                                } else {
+                                    nodeDataEmpty = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (nodeDataEmpty) {
+                            return dataError;
+                        }
+                        this.nodesData = newNodesData;
+                    } else {
+                        return dataError;
+                    }
+
+                    // 编辑状态下如果重新生成了开始节点，则需要重置id值
+                    if (this.nodesData[startKey]['id'] == null && workFlowConfigId != 'null') {
+                        this.nodesData[startKey]['id'] = workFlowConfigId;
+                    }
+                    // if (this.nodesData[startKey]['id'] == null && taskKeys.length > 0) {
+                    //     Object.keys(this.nodesData).forEach((nodeKey) => {
+                    //         if (nodeKey != startKey) {
+                    //             this.nodesData[nodeKey]['id'] = null;
+                    //             this.nodesData[nodeKey]['workFlowConfigId'] = null;
+                    //         }
+                    //     });
+                    // }
+
+
+					// 获取所有edge节点(连线)
+					var allEdges = this.model.filterDescendants(mxUtils.bind(this, this.edgeFilter));
+					// 根据连线动态生成连接信息
+                    for (var i = 0; i < allEdges.length; ++i) {
+                        var edge = allEdges[i];
+						var sourceInfo = this.getNodeInfo(edge.source);
+						var targetInfo = this.getNodeInfo(edge.target);
+						var nodeData = null;
+						if (sourceInfo.type == 'start') {
+							this.nodesData[sourceInfo.key]['defaultNextStep'] = this.nodesData[targetInfo.key]['step']; // 校验
+						} else if (sourceInfo.type == 'task') {
+							var availableSteps = this.nodesData[sourceInfo.key]['availableSteps'];
+							var stepArr = [];
+							if (!!availableSteps) {
+								stepArr = JSON.parse(availableSteps);
+							}
+							var nextStepObj = {};
+							var targetType = targetInfo.type;
+							var labelCell = this.model.getChildAt(edge, 0); // 获取连线上的标签信息，用于设置action
+
+							if (targetType == 'end') { // 目标节点为结束节点
+								var successLabel = '成功,通过';
+								var failLabel = '失败,拒绝'
+								nextStepObj.action = !!labelCell ? labelCell.value : '结束';
+
+								// 失败结束，成功结束，流程跳转
+								if (!!labelCell) {
+									if (successLabel.indexOf(labelCell.value) != -1) {
+										nextStepObj.wfOption = '1'; // 成功结束
+									} else if (failLabel.indexOf(labelCell.value) != -1) {
+										nextStepObj.wfOption = '2'; // 失败结束
+									} else {
+										nextStepObj.wfOption = '1'; // 默认成功结束
+									}
+								} else {
+									nextStepObj.wfOption = '1'; // 默认成功结束
+								}
+								nextStepObj.nextStep = ''; // 结束时nextStep设置为空
+							} else {
+								// action默认设置为下个节点的中文名称
+								nextStepObj.action = !!labelCell ? labelCell.value : this.nodesData[targetInfo.key]['name'];
+								nextStepObj.wfOption = '0'; // 流程跳转
+								nextStepObj.nextStep = this.nodesData[targetInfo.key]['step'];
+							}
+							stepArr.push(nextStepObj);
+							this.nodesData[sourceInfo.key]['availableSteps'] = JSON.stringify(stepArr); // 更新availableSteps
+						}
+                    }
+					return { success: true, msg: "节点数据获取成功", data: this.nodesData };
+				};
+
+				// 流程图回显
+				if (Object.keys(wfEditorRegion.regionData).length > 0) { // 编辑，数据不为空
+					var regionData = wfEditorRegion.regionData;
+					var xml = regionData.config.link; // 校验
+					var xmlDocument = mxUtils.parseXml(xml);
+					if (xmlDocument.documentElement != null && xmlDocument.documentElement.nodeName == 'mxGraphModel') {
+						var decoder = new mxCodec(xmlDocument);
+						var node = xmlDocument.documentElement;
+						decoder.decode(node, this.editor.graph.getModel());
+					}
+					// 构造nodesData
+					var startId = `start_${regionData.config.cellId}`;
+					wfEditorRegion.nodesData[startId] = regionData.config;
+					var steps = regionData.steps;
+					if (!!steps && steps.length != 0) {
+						steps.forEach((stepObj, index) => {
+							wfEditorRegion.nodesData[`task_${stepObj.step.cellId}`] = stepObj.step;
+						});
+					}
+					console.log('nodesData: ', wfEditorRegion.nodesData);
+
+
+				}
+
+				this.editor.graph.editorRegion = wfEditorRegion; // 设置外层region
+
+
+
+				// Updates action states which require a backend
+				// if (!Editor.useLocalStorage)
+				// {
+				// 	mxUtils.post(OPEN_URL, '', mxUtils.bind(this, function(req)
+				// 	{
+				// 		var enabled = req.getStatus() != 404;
+				// 		this.actions.get('open').setEnabled(enabled || Graph.fileSupport);
+				// 		this.actions.get('import').setEnabled(enabled || Graph.fileSupport);
+				// 		this.actions.get('save').setEnabled(enabled);
+				// 		this.actions.get('saveAs').setEnabled(enabled);
+				// 		this.actions.get('export').setEnabled(enabled);
+				// 	}));
+				// }
+			};
+
+			// Adds required resources (disables loading of fallback properties, this can only
+			// be used if we know that all keys are defined in the language specific file)
+			mxResources.loadDefaultBundle = false;
+			var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
+				mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
+
+			// Fixes possible asynchronous requests
+			mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr)
+			{
+				// Adds bundle text to resources
+				mxResources.parse(xhr[0].getText());
+
+				// Configures the default graph theme
+				var themes = new Object();
+				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement();
+
+				// Main
+				new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+			}, function()
+			{
+				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
+			});
+		});
+
+	</script>
+</body>
+</html>

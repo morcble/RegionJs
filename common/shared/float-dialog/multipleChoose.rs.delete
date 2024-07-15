@@ -1,0 +1,156 @@
+<!-- TODO 删除 -->
+<style>
+#REGION{
+	padding-bottom: 0.5rem;
+}
+</style>
+<div id="REGION" class="hidden">
+	<div class="form-wrap">
+		<div class="form">
+			<div style="margin: 10px;">
+				<input type="hidden" region-attr="refId" class=" region-searchable">
+				<input type="text" region-attr="name" class="form-control region-searchable" maxlength="20" width="100%" autocomplete="no" onchange="REGION.onNameChange">
+			</div>
+			<div class="table-body hidden">
+	            <div class="datas" region-list="list">
+	            	<div class="row table-left">
+		            	<div class="col-xs-2 maxwidth40"><input type="checkbox" class="multipleCbs" onclick="REGION.checkItem(event)"></div>
+						<div class="col-xs-10"><span region-attr="name"></span></div>
+					</div>
+	            </div>
+        	</div>
+		</div>
+	</div>
+	
+</div>	
+
+<script type="text/javascript">
+var REGION = {
+		checkItem:function(event){
+			var checkBoxElem = RegionUtil.getEventTarget(event);
+			var curRegion = RegionUtil.getRegionByElem(checkBoxElem);
+			
+			var rowData = RegionUtil.getRowData(checkBoxElem);
+			var checked = $(checkBoxElem).prop("checked");
+
+			var inputRegionData = curRegion.inputRegion.regionData;
+			
+			var selectedDataArray = inputRegionData[curRegion.selectedAttribute];
+			var selectedDataValueMap ={};
+			for(var i = 0 ; i<selectedDataArray.length;i++){
+				selectedDataValueMap[selectedDataArray[i].value] = true;
+			}
+	
+			if(checked){
+				if(!selectedDataValueMap[rowData[curRegion.queryCode]]){
+					selectedDataArray.push({"text":rowData.name,"value":rowData[curRegion.queryCode]});
+					selectedDataValueMap[rowData[curRegion.queryCode]] = true;
+				}
+			}
+			else{
+				if(selectedDataValueMap[rowData[curRegion.queryCode]]){
+					selectedDataValueMap[rowData[curRegion.queryCode]] = false;
+				}
+			}
+			for(var i = 0 ; i<selectedDataArray.length;i++){
+				if(!selectedDataValueMap[selectedDataArray[i].value]){
+					selectedDataArray.splice(i,1);
+				}
+			}
+			RegionUtil.renderMutipleItems(curRegion.inputHolder,selectedDataArray,REGION.itemRemoveCallback);
+			curRegion.updateCheckboxInList();
+		},
+		itemRemoveCallback:function(removedVal,inputRegion){
+			inputRegion.dialogRegion.updateCheckboxInList();//更新UI
+		},
+		onNameChange:function(newVal){
+			var curRegion = RegionUtil.getRegionByElem(this[0]);
+			curRegion.setName(newVal);
+			curRegion.search();
+		},
+		afterRenderData:function(){
+			if(!this.inited){
+				this.inited = true;
+				this.onSearchDialog = REGION.onSearchDialog;
+				this.updateCheckboxInList = REGION.updateCheckboxInList;
+			}
+			else{
+				var curRegion = this;
+				curRegion.updateCheckboxInList();
+			}
+		},
+		updateCheckboxInList:function(){
+			var curRegion = this;
+			var inputRegionData = curRegion.inputRegion.regionData;
+			if(inputRegionData[curRegion.selectedAttribute]==null){
+				inputRegionData[curRegion.selectedAttribute] = [];
+			}
+			var selectedDataArray = inputRegionData[curRegion.selectedAttribute];
+			var selectedDataValueMap ={};
+			
+			var selectValStr = "";
+			for(var i = 0 ; i<selectedDataArray.length;i++){
+				selectedDataValueMap[selectedDataArray[i].value] = true;
+				
+				selectValStr+=selectedDataArray[i].value;
+				if(i!= (selectedDataArray.length-1)){
+					selectValStr+=",";
+				}
+			}
+			
+			var checkBoxes = curRegion.find(".multipleCbs");
+			if (!curRegion.regionData||!curRegion.regionData.list){
+				return;
+			}
+			var dataList = curRegion.regionData.list;
+			if(dataList==null)return;
+			for(var i = 0 ; i <dataList.length ;i++){
+				if(selectedDataValueMap[dataList[i][curRegion.queryCode]]){
+					$(checkBoxes[i]).prop("checked",true);
+				}
+				else{
+					$(checkBoxes[i]).prop("checked",false);
+				}
+			}
+			
+			
+			//更新UI后 重新设置值
+			//console.log(selectValStr)
+			//console.log(curRegion.callBackAttrName)
+			curRegion.inputRegion.setRegionUIAttr(curRegion.callBackAttrName,selectValStr);
+		},
+		/*
+		*inputRegion
+		inputHolder    
+		callBackAttrName  回调的目标region的属性
+		selectedAttribute  被选中的属性
+		*/
+		onSearchDialog:function(inputRegion,inputHolder,callBackAttrName,selectedAttribute,queryCode){
+			var curRegion = this;
+			curRegion.inputRegion = inputRegion;
+			curRegion.inputRegion.dialogRegion = curRegion;
+			curRegion.inputHolder = inputHolder;
+			curRegion.callBackAttrName = callBackAttrName;
+			curRegion.selectedAttribute = selectedAttribute;
+			
+			if(queryCode==null)queryCode="code";
+			curRegion.queryCode = queryCode;
+			
+			curRegion.updateCheckboxInList();
+		}
+
+}
+
+
+RegionUtil.ready(function(){
+	var gridRegion = RegionUtil.newGridRegion("#REGION");	
+	gridRegion.resUrl = Config.backendPath+gridRegion.paraMap.get("listUrl");
+	gridRegion.afterRenderData = REGION.afterRenderData;
+	gridRegion.search();	
+
+});
+
+</script>
+
+
+

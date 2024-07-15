@@ -1,0 +1,27 @@
+[	
+		{
+			"id": "100",
+			"icon": "fa-users",
+			"label": "用户",
+			"value": "user",
+			"parentNodeId": "0",
+			"expand": false
+		},
+		{
+			"id": "1100",
+			"icon": "fa-address-book",
+			"label": "角色管理",
+			"value": "sys/admin/rcs/msg/msgconfig/msgconfiglist.rs",
+			"parentNodeId": "100",
+			"expand": false
+		},
+		{
+			"id": "1200",
+			"icon": "fa-book",
+			"label": "字典配置",
+			"value": "sys/admin/rcs/msg/msg/msglist.rs",
+			"parentNodeId": "100",
+			"expand": false
+		}
+		
+]
