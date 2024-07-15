@@ -28,7 +28,7 @@ var REGION = {
 	}
 };
 
-<!--  component mounted trigger -->
+<!--  mounted trigger -->
 RS.ready(function(){
 	var region = RS.newRegion("#REGION",null);
 	region.afterRenderData = REGION.afterRenderData;
