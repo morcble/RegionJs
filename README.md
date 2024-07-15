@@ -4,6 +4,6 @@
 - 3.Do you miss the old days when you could simply copy the source files to update and deploy your web system?
 - 4.But you still hope to use web components to enhance the readability and reusability of your program.
 
-If you got the above concerns, please try out this web framework. It's a lightweight and extremely easy-to-start web frontend framework called Region JS.
+If you got the above concerns, please try out this web framework. It's a lightweight and extremely easy-to-start web frontend framework, it is named Region JS.
 
-## Overview
+# Overview Of Region JS
