@@ -35,7 +35,7 @@ RS.ready(function(){
 	region.renderRegion();
 })
 </script>
-
+```
 
 # Start Region JS project
 - 1.Checkout out/download souce code of main branch.
