@@ -30,7 +30,7 @@ var REGION = {
 
 <!--  mounted trigger -->
 RS.ready(function(){
-	var region = RS.newRegion("#REGION",null);
+	var region = RS.newRegion("#REGION");
 	region.afterRenderData = REGION.afterRenderData;
 	region.renderRegion();
 })
